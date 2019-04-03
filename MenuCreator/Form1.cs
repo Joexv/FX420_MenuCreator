@@ -1,5 +1,4 @@
 ﻿using IniParser;
-using MenuCreator.JSON;
 using Microsoft.Office.Interop.Excel;
 using Renci.SshNet;
 using System;
@@ -14,6 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WMPLib;
+using AppForm = System.Windows.Forms.Application;
 
 using Excel = Microsoft.Office.Interop.Excel;
 
@@ -38,7 +38,7 @@ namespace MenuCreator
             DisposePictureBox();
             if (radioButton1.Checked)
             {
-                Process.Start(@"Z:\Menus\MenuCreator\StrainMenuCreator.exe");
+                Process.Start(AppForm.StartupPath + @"\StrainMenuCreator.exe");
                 this.Close();
             }
             else
@@ -650,20 +650,13 @@ namespace MenuCreator
                     Console.WriteLine("GIF Extracted");
                     int i = 0;
                     string Target = Path.Combine(Desktop, "Gif");
-                    while (i < 9)
+                    while (i < 10)
                     {
-                        i++;
                         Target = Path.Combine(Desktop, "Gif");
                         string img = "Target-" + i + ".png";
-                        Console.WriteLine("Renaming files...");
-                        Console.WriteLine(Path.Combine(Target, img));
-                        Console.WriteLine(Path.Combine(Target, "Target-0" + i.ToString() + ".png"));
-                        File.Move(Path.Combine(Target, img), Path.Combine(Target, "Target-0" + i.ToString() + ".png"));
                         if (File.Exists(Path.Combine(Target, img)))
-                        {
-                            Console.WriteLine("The old file still exists, weird.. Deleting.");
-                            File.Delete(Path.Combine(Target, img));
-                        }
+                                File.Move(Path.Combine(Target, img), Path.Combine(Target, "Target-0" + i.ToString() + ".png"));
+                        i++;
                     }
 
                     foreach (string img in Directory.GetFiles(Path.Combine(Desktop, "Gif"), "*.png"))
@@ -683,14 +676,14 @@ namespace MenuCreator
 
                 Console.WriteLine(Path.Combine(Desktop, "Output_Gif_" + DateTime.Today.ToString("MM-dd-yyyy")) + ".gif");
                 Console.WriteLine("Creating mp4 file out of GIF");
-                Command = "Z:\\Menus\\MenuCreator\\HandBrakeCLI.exe -Z \"Very Fast 1080p30\" -i C:\\Users\\Joe\\Desktop\\Menu_GIF.gif -o " + Path.Combine(Desktop, "movie.mp4") + " & echo done";
+                Command = AppForm.StartupPath + "\\HandBrakeCLI.exe -Z \"Very Fast 1080p30\" -i C:\\Users\\Joe\\Desktop\\Menu_GIF.gif -o " + Path.Combine(Desktop, "movie.mp4") + " & echo done";
                 cmd(Command, true, true, true);
 
                 try
                 {
-                    if (Duration(Path.Combine(Desktop, "movie.mp4")) <= 10)
+                    if (Duration(Path.Combine(Desktop, "movie.mp4")) <= 5)
                     {
-                        Console.WriteLine("Video is 10 seconds or under extending...");
+                        Console.WriteLine("Video is 5 seconds or under extending...");
                         CombineVideos();
                         Console.WriteLine("Done");
                     }
@@ -700,10 +693,10 @@ namespace MenuCreator
                     Console.WriteLine(ex.ToString());
                     Console.WriteLine("Error on combining videos!");
                 }
+
                 try
                 {
-                    File.Delete(Path.Combine(Desktop, "Gif"));
-                    Directory.Delete(Path.Combine(Desktop, "Gif"));
+                    Directory.Delete(Path.Combine(Desktop, "Gif"), true);
                 }
                 catch
                 {
@@ -722,51 +715,45 @@ namespace MenuCreator
             string Desktop = Environment.GetFolderPath
                 (Environment.SpecialFolder.DesktopDirectory);
 
-            if (File.Exists("Z:\\Menus\\MenuCreator\\movie.mp4"))
-            {
-                File.Delete("Z:\\Menus\\MenuCreator\\movie.mp4");
-            }
+            if (File.Exists(AppForm.StartupPath + "\\movie.mp4"))
+                File.Delete(AppForm.StartupPath + "\\movie.mp4");
 
-            if (File.Exists(Path.Combine(Desktop, "movie_combined.mp4")))
-            {
-                File.Delete(Path.Combine(Desktop, "movie_combined.mp4"));
-            }
+            if (File.Exists(Path.Combine(AppForm.StartupPath, "movie_combined.mp4")))
+                File.Delete(Path.Combine(AppForm.StartupPath, "movie_combined.mp4"));
+            
 
-            File.Copy(Path.Combine(Desktop, "movie.mp4"), "Z:\\Menus\\MenuCreator\\movie.mp4");
-            File.Delete(Path.Combine(Desktop, "movie.mp4"));
+            File.Copy(Path.Combine(Desktop, "movie.mp4"), AppForm.StartupPath + "\\movie.mp4");
 
-            string Commands = "-safe 0 -f concat -i list.txt -c copy " + Path.Combine(Desktop, "movie_combined.mp4");
+            string Commands = "-safe 0 -f concat -i list.txt -c copy " + Path.Combine(AppForm.StartupPath, "movie_combined.mp4");
             Process p = new Process();
-            p.StartInfo.FileName = "Z:\\Menus\\MenuCreator\\ffmpeg.exe";
+            p.StartInfo.FileName = AppForm.StartupPath + "\\ffmpeg.exe";
             p.StartInfo.Arguments = Commands;
             p.StartInfo.UseShellExecute = false;
             p.StartInfo.CreateNoWindow = true;
             p.StartInfo.RedirectStandardOutput = true;
-            //Process.OutputDataReceived += new DataReceivedEventHandler(SortOutputHandler);
-            //Process.ErrorDataReceived += new DataReceivedEventHandler(SortOutputHandler);
-            //p.EnableRaisingEvents = true;
-            //p.OutputDataReceived += (s, ea) => { Console.WriteLine($"STD: {ea.Data}"); };
-            //p.ErrorDataReceived += (s, ea) => { Console.WriteLine($"ERR: {ea.Data}"); };
+            p.StartInfo.Verb = "runas";
             p.Start();
-            p.BeginOutputReadLine();
-            p.BeginErrorReadLine();
-
+     
             p.WaitForExit();
             p.Close();
             p.Dispose();
             p = null;
+            if(File.Exists(Path.Combine(Desktop, "movie.mp4")))
+                File.Delete(Path.Combine(Desktop, "movie.mp4"));
 
-            //File.Delete(Path.Combine(Desktop, "movie.mp4"));
-            File.Move(Path.Combine(Desktop, "movie_combined.mp4"), Path.Combine(Desktop, "movie.mp4"));
-            File.Delete("movie.mp4");
-            Directory.Delete(Path.Combine(Desktop, "Gif\\"), true);
+            File.Move(Path.Combine(AppForm.StartupPath, "movie_combined.mp4"), Path.Combine(Desktop, "movie.mp4"));
+            if (File.Exists("movie.mp4"))
+                File.Delete("movie.mp4");
+
+            if (Duration(Path.Combine(Desktop, "movie.mp4")) <= 5)
+                CombineVideos();
         }
 
         public Double Duration(String file)
         {
             WindowsMediaPlayer wmp = new WindowsMediaPlayer();
             IWMPMedia mediainfo = wmp.newMedia(file);
-            Console.WriteLine(mediainfo.duration);
+            Console.WriteLine("Duration: " + mediainfo.duration);
             return mediainfo.duration;
         }
 
@@ -814,7 +801,7 @@ namespace MenuCreator
 
         private void yPos_TextChanged(object sender, EventArgs e)
         {
-            Write("yPos", xPos.Text);
+            Write("yPos", yPos.Text);
         }
 
         private void fDelay_TextChanged(object sender, EventArgs e)
@@ -872,7 +859,7 @@ namespace MenuCreator
         private void SaveSettings(string Object)
         {
             var parser = new FileIniDataParser();
-            var data = parser.ReadFile(@"Z:\Menus\MenuCreator\Settings.ini");
+            var data = parser.ReadFile(AppForm.StartupPath + @"\Settings.ini");
 
             Console.WriteLine("Saving to Settings.ini");
             Console.WriteLine(Object);
@@ -927,44 +914,8 @@ namespace MenuCreator
             }
         }
 
-        private Asset AssetToUpdate { get; set; }
-        private Device DeviceToUpdate { get; set; }
-
         private void button11_Click(object sender, EventArgs e)
         {
-            Upload();
-        }
-
-        private async void Upload()
-        {
-            string ImageLocation = Environment.GetFolderPath
-                           (Environment.SpecialFolder.DesktopDirectory) + "\\" + GetMenuString() + "_" +
-                       DateTime.Today.ToString("MM-dd-yyyy") + "_.png";
-            this.AssetToUpdate = new Asset();
-            Asset a = this.AssetToUpdate;
-            //a.AssetID = "3f8265c9e9ed4764aa48011005a1b0f9";
-            a.Mimetype = "image";
-            a.isEnabled = 1;
-            a.Name = GetMenuString();
-            a.EndDate = DateTime.Parse("2999-01-01");
-            a.Duration = "150";
-            a.PlayOrder = 0;
-            a.NoCache = 0;
-            a.Uri = "/home/pi/screenly_assests/menu.png";
-            a.StartDate = (DateTime.Now).ToUniversalTime();
-            DialogResult dialogResult = MessageBox.Show("test", "Export options", MessageBoxButtons.YesNo);
-            if (dialogResult == DialogResult.Yes)
-            {
-                Device device = new Device
-                {
-                    Name = GetMenuString(),
-                    Location = "FrontRoom",
-                    IpAddress = "192.168.1.114",
-                    Port = "80",
-                    ApiVersion = "v1"
-                };
-                await (device as Device).CreateAsset(a);
-            }
         }
 
         public string GetIP()
@@ -1045,7 +996,7 @@ namespace MenuCreator
                         process.WaitForExit();
                     }
                     Console.WriteLine("Turning menu into nice and easy list");
-                    string excelFile = "Z:\\Menus\\MenuCreator\\" + GetMenuString() + ".xlsx";
+                    string excelFile = AppForm.StartupPath + "\\" + GetMenuString() + ".xlsx";
                     Excel.Application excel = new Excel.Application();
                     Workbook w = excel.Workbooks.Open(excelFile);
                     Worksheet ws = w.Sheets[1];
@@ -1098,7 +1049,7 @@ namespace MenuCreator
             }
 
             File.Copy("Blank.xlsx", "PrintMenu.xlsx");
-            string excelFile = "Z:\\Menus\\MenuCreator\\PrintMenu.xlsx";
+            string excelFile = AppForm.StartupPath + "\\PrintMenu.xlsx";
             Excel.Application excel = new Excel.Application();
             Workbook w = excel.Workbooks.Open(excelFile);
             Worksheet ws = w.Sheets[1];

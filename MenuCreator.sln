@@ -20,11 +20,14 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		BuildVersion_ConfigurationName = Release
-		BuildVersion_AssemblyInfoFilename = MenuCreator\Properties\AssemblyInfo.cs
-		BuildVersion_StartDate = 2019/1/1
-		BuildVersion_UpdateFileVersion = True
-		BuildVersion_UpdateAssemblyVersion = True
 		SolutionGuid = {69AA7E25-6E8D-402C-8EB6-EE9DA151D601}
+		BuildVersion_UpdateAssemblyVersion = True
+		BuildVersion_UpdateFileVersion = True
+		BuildVersion_StartDate = 2019/1/1
+		BuildVersion_AssemblyInfoFilename = MenuCreator\Properties\AssemblyInfo.cs
+		BuildVersion_ConfigurationName = Release
+	EndGlobalSection
+	GlobalSection(NDepend) = preSolution
+		Project = ".\MenuCreator.ndproj"
 	EndGlobalSection
 EndGlobal
