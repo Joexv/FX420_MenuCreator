@@ -8,13 +8,13 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WMPLib;
 using AppForm = System.Windows.Forms.Application;
-
 using Excel = Microsoft.Office.Interop.Excel;
 
 namespace MenuCreator
@@ -25,12 +25,6 @@ namespace MenuCreator
         {
             InitializeComponent();
         }
-
-        private void groupBox1_Enter(object sender, EventArgs e)
-        {
-        }
-
-        #region Everything But Uploading to TV
 
         //Open Excel File
         private void button1_Click(object sender, EventArgs e)
@@ -43,31 +37,11 @@ namespace MenuCreator
             }
             else
             {
-                try
-                {
-                    string Menu = "";
-                    if (jointRadio.Checked)
-                    {
-                        Menu = "Joint_Menu.xlsx";
-                    }
-                    else if (edibleRadio.Checked)
-                    {
-                        Menu = "Edible_Menu.xlsx";
-                    }
-                    else if (cartRadio.Checked)
-                    {
-                        Menu = "Cart_Menu.xlsx";
-                    }
-                    else if (dabRadio.Checked)
-                    {
-                        Menu = "Dab_menu.xlsx";
-                    }
-
+                try{
+                    string Menu = GetMenuString() + ".xlsx";
                     Process.Start(Menu);
                 }
-                catch
-                {
-                }
+                catch(Exception ex){ MessageBox.Show(ex.ToString()); }
             }
         }
 
@@ -82,22 +56,13 @@ namespace MenuCreator
         {
             string Menu = "";
             if (jointRadio.Checked)
-            {
                 Menu = "Joint_Menu";
-            }
             else if (edibleRadio.Checked)
-            {
                 Menu = "Edible_Menu";
-            }
             else if (cartRadio.Checked)
-            {
                 Menu = "Cart_Menu";
-            }
             else if (dabRadio.Checked)
-            {
                 Menu = "Dab_Menu";
-            }
-
             return Menu;
         }
 
@@ -105,26 +70,15 @@ namespace MenuCreator
 
         private void button2_Click(object sender, EventArgs e)
         {
-            try
-            {
-                CreateMenu();
-            }
+            try{ CreateMenu(); }
             catch
             {
                 Console.WriteLine("Menu creation failed, trying again....");
                 DisposePictureBox();
-                if (File.Exists("Menu_Small.png"))
-                {
-                    File.Delete("Menu_Small.png");
-                }
-
+                File.Delete("Menu_Small.png");
                 FileName = GetMenuString();
                 Output = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\" + FileName + "_" + DateTime.Today.ToString("MM-dd-yyyy") + "_.png";
-                if (File.Exists(Output))
-                {
-                    File.Delete(Output);
-                }
-
+                File.Delete(Output);
                 CreateMenu();
             }
         }
@@ -132,6 +86,7 @@ namespace MenuCreator
         public void CreateMenu()
         {
             Cursor.Current = Cursors.WaitCursor;
+            Clipboard.Clear();
             foreach (var process in Process.GetProcessesByName("EXCEL"))
             {
                 process.Kill();
@@ -139,22 +94,17 @@ namespace MenuCreator
             }
 
             DisposePictureBox();
-
             FileName = GetMenuString();
             XLSX = FileName + ".xlsx";
             Output = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\" + FileName + "_" + DateTime.Today.ToString("MM-dd-yyyy") + "_.png";
-            FileLocation = System.Windows.Forms.Application.StartupPath + "\\" + XLSX;
-            if (File.Exists(Output))
-            {
-                File.Delete(Output);
-            }
-
-            if (CheckForFile(XLSX))
-            {
+            FileLocation = AppForm.StartupPath + "\\" + XLSX;
+            File.Delete(Output);
+            if (File.Exists(XLSX)) {
                 ConvertFile(Output);
+                PreviewImage();
             }
-
-            PreviewImage();
+            else
+                MessageBox.Show("Excel File is missing!");
             Cursor.Current = Cursors.Default;
         }
 
@@ -164,17 +114,10 @@ namespace MenuCreator
             CreateImage_Alt(excelRange1.Text, excelRange2.Text);
             ResizeImage("Menu_Small.png");
 
-            //File.Delete("Menu_Small.png");
-
             if (File.Exists(output))
-            {
                 MessageBox.Show("Image Created! It should be located on your desktop.");
-            }
             else
-            {
                 Console.WriteLine("Image creation failed....");
-                MessageBox.Show("Looks like something went wrong.");
-            }
         }
 
         public string ReadINI(string Key = "Settings", string Object = "")
@@ -182,17 +125,6 @@ namespace MenuCreator
             var parser = new FileIniDataParser();
             var data = parser.ReadFile("Settings.ini");
             return data[Key][Object];
-        }
-
-        public bool CheckForFile(string ExcelFile)
-        {
-            bool Temp = File.Exists(ExcelFile);
-            if (!Temp)
-            {
-                MessageBox.Show("Excel file is missing!");
-            }
-
-            return Temp;
         }
 
         public void CreateImage_Alt(string Range1, string Range2)
@@ -226,20 +158,14 @@ namespace MenuCreator
         public void DisposePictureBox()
         {
             if (pictureBox1.Image != null)
-            {
-                Console.WriteLine("Disposing picture box image...");
                 try
                 {
+                    Console.WriteLine("Disposing picture box image...");
                     var image = pictureBox1.Image;
                     pictureBox1.Image = null;
                     image.Dispose();
                 }
-                catch
-                {
-                    Console.WriteLine(
-                        "Failed to dispose of picture box image, probably due to picture box not having an image.");
-                }
-            }
+                catch{ Console.WriteLine("Failed to dispose of picture box image, probably due to picture box not having an image."); }
         }
 
         public void ResizeImage(string fileName)
@@ -268,9 +194,7 @@ namespace MenuCreator
                 }
 
                 using (Bitmap resizedImage = ResizeImage(image, Width, Height))
-                {
                     resizedImage.Save(Output);
-                }
             }
             Console.WriteLine("Done");
             File.Delete("Menu_Small.png");
@@ -279,16 +203,13 @@ namespace MenuCreator
         private void Extract(string nameSpace, string outDirectory, string internalFilePath, string resourceName)
         {
             var assembly = Assembly.GetCallingAssembly();
-
             using (var s = assembly.GetManifestResourceStream(nameSpace + "." +
                                                    (internalFilePath == "" ? "" : internalFilePath + ".") +
                                                    resourceName))
             using (var r = new BinaryReader(s))
             using (var fs = new FileStream(outDirectory + "\\" + resourceName, FileMode.OpenOrCreate))
             using (var w = new BinaryWriter(fs))
-            {
                 w.Write(r.ReadBytes((int)s.Length));
-            }
         }
 
         public Bitmap ResizeImage(Image image, int width, int height)
@@ -332,88 +253,45 @@ namespace MenuCreator
         private void PreviewImage()
         {
             DisposePictureBox();
-            string Picture = "";
             try
             {
-                if (jointRadio.Checked)
-                {
-                    Picture = "Joint_Menu";
-                }
-                else if (edibleRadio.Checked)
-                {
-                    Picture = "Edible_Menu";
-                }
-                else if (cartRadio.Checked)
-                {
-                    Picture = "Cart_Menu";
-                }
-                else if (dabRadio.Checked)
-                {
-                    Picture = "Dab_Menu";
-                }
-                else
-                {
-                    if (radioButton1.Checked)
-                    {
-                        Picture = "Menu";
-                    }
-                }
                 string ImageLocation = Environment.GetFolderPath
-                                           (Environment.SpecialFolder.DesktopDirectory) + "\\" + Picture + "_" +
+                                           (Environment.SpecialFolder.DesktopDirectory) + "\\" + GetMenuString() + "_" +
                                        DateTime.Today.ToString("MM-dd-yyyy") + "_.png";
                 pictureBox1.Image = Image.FromFile(ImageLocation);
             }
-            catch
-            {
-            }
+            catch{}
         }
 
-        #endregion Everything But Uploading to TV
-
-        //Upload to TV
         private void button4_Click(object sender, EventArgs e)
         {
             Process.Start(@"Z:\Menus - OLD\Menu Manager\index.html");
         }
 
-        private void OldWeb()
+        private string GetIP()
         {
-            try
-            {
-                string URL = "";
-                if (jointRadio.Checked)
-                {
-                    URL = "192.168.1.111";
-                }
-                else if (edibleRadio.Checked)
-                {
-                    URL = "192.168.1.114";
-                }
-                else if (cartRadio.Checked)
-                {
-                    URL = "192.168.1.115";
-                }
-                else if (dabRadio.Checked)
-                {
-                    URL = "192.168.1.116";
-                }
-
-                Process.Start("Http://" + URL);
-            }
-            catch { }
+            if (jointRadio.Checked)
+                return "192.168.1.111";
+            else if (edibleRadio.Checked)
+                return "192.168.1.114";
+            else if (cartRadio.Checked)
+                return "192.168.1.115";
+            else if (dabRadio.Checked)
+                return "192.168.1.116";
+            else if (radioButton1.Checked)
+                return "192.168.1.112";
+            else
+                return "";
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            if (Process.GetProcessesByName("MenuCreator").Count() > 1)
+                this.Close();
             if (!File.Exists("Settings.ini"))
-            {
                 Extract("MenuCreator", System.Windows.Forms.Application.StartupPath, "Files", "Settings.ini");
-            }
 
-            if (File.Exists("Menu_Small.png"))
-            {
-                File.Delete("Menu_Small.png");
-            }
+            File.Delete("Menu_Small.png");
 
             _writer = new TextBoxStreamWriter(txtConsole);
             Console.SetOut(_writer);
@@ -458,24 +336,15 @@ namespace MenuCreator
                     @"/home/pi/screenly_assets/movie.mp4", "192.168.1.112");
                 Console.WriteLine("Movie should be uploaded, runnning ssh command");
 
-                var task = Task.Run(() =>
-                {
-                    SSH(@"sudo -u pi nohup omxplayer /home/pi/screenly_assets/movie.mp4 --loop >/dev/null 2>&1 & echo done", "192.168.1.112");
-                });
+                var task = Task.Run(() =>{
+                    SSH(@"sudo -u pi nohup omxplayer /home/pi/screenly_assets/movie.mp4 --loop >/dev/null 2>&1 & echo done", "192.168.1.112");});
 
-                bool isCompletedSuccessfully = task.Wait(TimeSpan.FromMilliseconds(3000));
-                if (!isCompletedSuccessfully)
-                {
+                if (!task.Wait(TimeSpan.FromMilliseconds(3000)))
                     MessageBox.Show("Done. Please note that this is experimental and may not function 100%.");
-                }
-
                 Cursor.Current = Cursors.Default;
             }
             else
-            {
-                MessageBox.Show(
-                    "There's no movie named 'movie.mp4' on your desktop. If you don't know what you're doing you shouldn't be running this command.");
-            }
+                MessageBox.Show("There's no movie named 'movie.mp4' on your desktop. If you don't know what you're doing you shouldn't be running this command.");
         }
 
         public void SSH(string Command, string IP = "192.168.1.112")
@@ -502,43 +371,13 @@ namespace MenuCreator
 
         private void button6_Click(object sender, EventArgs e)
         {
-            string IP = "";
-            try
-            {
-                if (jointRadio.Checked)
-                {
-                    IP = "192.168.1.111";
-                }
-                else if (edibleRadio.Checked)
-                {
-                    IP = "192.168.1.114";
-                }
-                else if (cartRadio.Checked)
-                {
-                    IP = "192.168.1.115";
-                }
-                else if (dabRadio.Checked)
-                {
-                    IP = "192.168.1.116";
-                }
-                else if (radioButton1.Checked)
-                {
-                    IP = "192.168.1.112";
-                }
-
-                SSH("sudo reboot", IP);
-            }
-            catch
-            {
-            }
+                SSH("sudo reboot", GetIP());
         }
 
         private void button7_Click(object sender, EventArgs e)
         {
-            var task = Task.Run(() =>
-            {
-                SSH(@"sudo kill -9 `pgrep omxplayer` & echo done", "192.168.1.112");
-            });
+            var task = Task.Run(() =>{
+                SSH(@"sudo kill -9 `pgrep omxplayer` & echo done", "192.168.1.112"); });
             bool isCompletedSuccessfully = task.Wait(TimeSpan.FromMilliseconds(10000));
         }
 
@@ -558,9 +397,7 @@ namespace MenuCreator
                 Process.ErrorDataReceived += new DataReceivedEventHandler(SortOutputHandler);
 
                 if (waitForexit == true)
-                {
                     Process.WaitForExit();
-                }
 
                 Process.Close();
                 Process.Dispose();
@@ -569,11 +406,6 @@ namespace MenuCreator
             catch (Exception e)
             {
                 Console.WriteLine("Error Processing ExecuteCommand : " + e.Message);
-            }
-            finally
-            {
-                //Process = null;
-                //ProcessInfo = null;
             }
         }
 
@@ -585,9 +417,7 @@ namespace MenuCreator
         private static void SortOutputHandler(object sendingProcess, DataReceivedEventArgs outLine)
         {
             if (!String.IsNullOrEmpty(outLine.Data))
-            {
                 cmdOutput.Append(Environment.NewLine + outLine.Data);
-            }
         }
 
         private bool BootTooBig()
@@ -596,13 +426,9 @@ namespace MenuCreator
             using (Image img = Image.FromFile(fileLocation))
             {
                 if (img.Width > 1920 || img.Height > 1080)
-                {
                     return true;
-                }
                 else
-                {
                     return false;
-                }
             }
         }
 
@@ -611,20 +437,14 @@ namespace MenuCreator
             Cursor.Current = Cursors.WaitCursor;
             Console.WriteLine("Starting Video creation process. This can take upwards of 10 minutes depending on your computer, GIF size/length and image size.");
             if (!BootTooBig())
-            {
                 VideoCreation();
-            }
             else
             {
                 DialogResult dialogResult = MessageBox.Show("Your image is larger than 1080p, do you want to continue making this into a video? Doing so can make the process take considerablly longer or even cause it to fail if your computer cant handle larger resolutions.", "Export options", MessageBoxButtons.YesNo);
                 if (dialogResult == DialogResult.Yes)
-                {
                     VideoCreation();
-                }
                 else
-                {
                     Console.WriteLine("Video Creation cancelled");
-                }
             }
             Cursor.Current = Cursors.Default;
         }
@@ -697,15 +517,12 @@ namespace MenuCreator
                     Console.WriteLine(ex.ToString());    
                 }
 
-                try{
-                    Directory.Delete(Path.Combine(Desktop, "Gif"), true);
-                }
+                try{ Directory.Delete(Path.Combine(Desktop, "Gif"), true); }
                 catch{}
             }
             else
-            {
                 MessageBox.Show("The menu needs to be on your desktop exactly as it was when it was created, and your gif needs to be on your desktop named 'insert.gif'.");
-            }
+            
             Cursor.Current = Cursors.Default;
         }
 
@@ -713,10 +530,7 @@ namespace MenuCreator
         {
             string Desktop = Environment.GetFolderPath
                 (Environment.SpecialFolder.DesktopDirectory);
-
-            if (File.Exists(Path.Combine(AppForm.StartupPath, "movie_combined.mp4")))
-                File.Delete(Path.Combine(AppForm.StartupPath, "movie_combined.mp4")); 
-
+            File.Delete(Path.Combine(AppForm.StartupPath, "movie_combined.mp4")); 
             File.Move(Path.Combine(Desktop, "movie.mp4"), AppForm.StartupPath + "\\movie.mp4");
 
             string Commands = "-safe 0 -f concat -i list.txt -c copy movie_combined.mp4";
@@ -727,18 +541,13 @@ namespace MenuCreator
             p.StartInfo.UseShellExecute = false;
             p.StartInfo.CreateNoWindow = false;
             p.StartInfo.RedirectStandardOutput = false;
-            //p.StartInfo.Verb = "runas";
             p.Start();
-     
             p.WaitForExit();
-            p.Close();
             p.Dispose();
             p = null;
 
-            if(File.Exists(Path.Combine(Desktop, "movie.mp4")))
-                File.Delete(Path.Combine(Desktop, "movie.mp4"));
-
-            File.Copy(Path.Combine(AppForm.StartupPath, "movie_combined.mp4"), Path.Combine(Desktop, "movie.mp4"));
+            File.Delete(Path.Combine(Desktop, "movie.mp4"));
+            File.Move(Path.Combine(AppForm.StartupPath, "movie_combined.mp4"), Path.Combine(Desktop, "movie.mp4"));
         }
 
         public Double Duration(String file)
@@ -860,17 +669,11 @@ namespace MenuCreator
             data[Object]["cH"] = cSizeH.Text ?? "NA";
             data[Object]["cW"] = cSizeW.Text ?? "NA";
             if (radio_4k.Checked)
-            {
-                data[Object]["Size"] = "4K" ?? "NA";
-            }
+                data[Object]["Size"] = "4K";
             else if (radio_1080.Checked)
-            {
-                data[Object]["Size"] = "1080" ?? "NA";
-            }
+                data[Object]["Size"] = "1080";
             else
-            {
-                data[Object]["Size"] = "Custom" ?? "NA";
-            }
+                data[Object]["Size"] = "Custom";
 
             parser.WriteFile("Settings.ini", data);
             Console.WriteLine("Saved");
@@ -883,57 +686,8 @@ namespace MenuCreator
 
         private void button9_Click(object sender, EventArgs e)
         {
-            string Menu = "";
-            if (jointRadio.Checked)
-            {
-                Menu = "Joint_Menu";
-            }
-            else if (edibleRadio.Checked)
-            {
-                Menu = "Edible_Menu";
-            }
-            else if (cartRadio.Checked)
-            {
-                Menu = "Cart_Menu";
-            }
-            else if (dabRadio.Checked)
-            {
-                Menu = "Dab_Menu";
-            }
             if (!radioButton1.Checked)
-            {
-                SaveSettings(Menu);
-            }
-        }
-
-        private void button11_Click(object sender, EventArgs e)
-        {
-        }
-
-        public string GetIP()
-        {
-            string URL = "";
-            if (jointRadio.Checked)
-            {
-                URL = "192.168.1.111";
-            }
-            else if (edibleRadio.Checked)
-            {
-                URL = "192.168.1.114";
-            }
-            else if (cartRadio.Checked)
-            {
-                URL = "192.168.1.115";
-            }
-            else if (dabRadio.Checked)
-            {
-                URL = "192.168.1.116";
-            }
-            else if (radioButton1.Checked)
-            {
-                URL = "192.168.1.112";
-            }
-            return URL;
+                SaveSettings(GetMenuString());
         }
 
         private const int ColumnBase = 26;
@@ -943,14 +697,10 @@ namespace MenuCreator
         public static string GetLetter(int index)
         {
             if (index <= 0)
-            {
                 throw new IndexOutOfRangeException("index must be a positive number");
-            }
 
             if (index <= ColumnBase)
-            {
                 return Digits[index - 1].ToString();
-            }
 
             var sb = new StringBuilder().Append(' ', DigitMax);
             var current = index;
@@ -964,9 +714,8 @@ namespace MenuCreator
         }
 
         public string Merge(int Num_Letter, int Num)
-        {
-            return (GetLetter(Num_Letter) + Num.ToString());
-        }
+        => (GetLetter(Num_Letter) + Num.ToString());
+        
 
         public int GetNum(string Range)
         {
@@ -1003,43 +752,26 @@ namespace MenuCreator
                     {
                         for (int a = 1; a <= r; a++)
                         {
-                            //Console.WriteLine(a);
                             var cellValue = (ws.Cells[a, i] as Range).Value;
-                            if (cellValue != null)
-                            {
-                                if (!FilterString(cellValue))
-                                {
-                                    if (cellValue.ToString().ToLower() != "name")
-                                    {
-                                        parts.Add(cellValue.ToString());
-                                    }
-                                }
-                            }
+                            if (cellValue != null && !FilterString(cellValue) && cellValue.ToString().ToLower() != "name")
+                                parts.Add(cellValue.ToString());
                         }
                     }
 
                     w.Close(false);
                     excel.Quit();
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.ToString());
-                }
+                catch (Exception ex){ Console.WriteLine(ex.ToString()); }
                 CreateExcel();
             }
             else
-            {
                 MessageBox.Show("To print the Flower menu press 'Edit' and then Print Menu under the Flower Menu Editor");
-            }
         }
 
         private void CreateExcel()
         {
             Console.WriteLine("Menu scanned creating printable document");
-            if (File.Exists("PrintMenu.xlsx"))
-            {
-                File.Delete("PrintMenu.xlsx");
-            }
+            File.Delete("PrintMenu.xlsx");
 
             File.Copy("Blank.xlsx", "PrintMenu.xlsx");
             string excelFile = AppForm.StartupPath + "\\PrintMenu.xlsx";
@@ -1081,18 +813,11 @@ namespace MenuCreator
                 input = input.Replace(".", "");
 
                 if (input == "cost")
-                {
                     return true;
-                }
                 else
-                {
                     return IsDigitsOnly(input);
-                }
             }
-            catch
-            {
-                return true;
-            }
+            catch{ return true; }
         }
 
         private void SendToPrinter(string File)
@@ -1110,9 +835,7 @@ namespace MenuCreator
                 p.Start();
 
                 p.WaitForInputIdle();
-                //Thread.Sleep(3000);
-                //if (false == p.CloseMainWindow())
-                //    p.Kill();
+                p.Dispose();
             }
             catch { }
         }
@@ -1120,21 +843,10 @@ namespace MenuCreator
         private bool IsDigitsOnly(object str)
         {
             if (str != null)
-            {
                 foreach (char c in str.ToString())
-                {
                     if (c < '0' || c > '9')
-                    {
                         return false;
-                    }
-                }
-            }
-
             return true;
-        }
-
-        private void groupBox3_Enter(object sender, EventArgs e)
-        {
         }
 
         private void button11_Click_1(object sender, EventArgs e)
@@ -1167,10 +879,7 @@ namespace MenuCreator
                         string companyFile = System.Windows.Forms.Application.StartupPath + "\\" + GetMenuString() + "_Companys.txt";
                         string iniFile = System.Windows.Forms.Application.StartupPath + "\\" + GetMenuString() + "_Products.ini";
 
-                        if (File.Exists(iniFile))
-                        {
-                            File.Delete(iniFile);
-                        }
+                        File.Delete(iniFile);
 
                         using (FileStream fs = File.Create(iniFile)) { }
 
@@ -1206,15 +915,9 @@ namespace MenuCreator
                                         var cellValue2 = (ws.Cells[a, i + 2] as Range).Value;
                                         string formatted = cellValue.ToString().Replace(": ", ":");
                                         if (cellValue1 != null)
-                                        {
                                             formatted += ":" + cellValue1.ToString();
-                                        }
-
                                         if (cellValue2 != null)
-                                        {
                                             formatted += ":" + cellValue2.ToString();
-                                        }
-
                                         parts.Add(formatted);
                                     }
                                     else
@@ -1222,9 +925,7 @@ namespace MenuCreator
                                         if (lastComp != "")
                                         {
                                             foreach (string p in parts)
-                                            {
                                                 data[lastComp.Split(':')[1]][p.Split(':')[0].ToUpper()] = p;
-                                            }
 
                                             parser.WriteFile(iniFile, data);
                                         }
@@ -1235,35 +936,22 @@ namespace MenuCreator
                                 }
                             }
                         }
-
                         File.WriteAllText(companyFile, String.Join("\n", Companys));
-
                         w.Close(false);
                         excel.Quit();
                     }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex.ToString());
-                    }
-                    //CreateExcel();
+                    catch (Exception ex) { Console.WriteLine(ex.ToString()); }
                 }
                 else
-                {
                     MessageBox.Show("The Flower menu is already exceless!!");
-                }
             }
         }
 
         private bool checkString(string toCheck)
         {
             foreach (string s in BadWords)
-            {
                 if (toCheck.ToLower().Contains(s))
-                {
                     return true;
-                }
-            }
-
             return false;
         }
 
@@ -1271,7 +959,7 @@ namespace MenuCreator
 
         private void button13_Click(object sender, EventArgs e)
         {
-            Process.Start(@"Z:\Menus - OLD\Help\index.html");
+            Process.Start("https://joexv.github.io/MenuCreatorHelp/");
         }
     }
 }
