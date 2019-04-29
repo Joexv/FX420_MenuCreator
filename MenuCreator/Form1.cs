@@ -421,6 +421,13 @@ namespace MenuCreator
             xPos.Text = ReadINI("Settings", "xPos");
             yPos.Text = ReadINI("Settings", "yPos");
             fDelay.Text = ReadINI("Settings", "fDelay");
+
+            Process p = new Process();
+            p.StartInfo.FileName = "explorer.exe";
+            p.StartInfo.Arguments = @"\\192.168.1.210\Server\MaydayButton\";
+            p.Start();
+            p.Kill();
+            p.Dispose();
         }
 
         private void radioButton1_CheckedChanged(object sender, EventArgs e)
@@ -640,9 +647,7 @@ namespace MenuCreator
                         Directory.Delete(Path.Combine(Desktop, "Gif"), true);
                         Console.WriteLine("Deleted old GIF");
                     }
-                    catch
-                    {
-                    }
+                    catch { }
                     Console.WriteLine("Both the GIF and menu are located extracting gif");
                     Directory.CreateDirectory(Path.Combine(Desktop, "Gif"));
                     Command = @"cd " + ImageMagick + " & magick convert -coalesce " + Path.Combine(Desktop, "Insert.gif") + " " + Path.Combine(Desktop, "Gif\\Target.png");
@@ -679,29 +684,23 @@ namespace MenuCreator
                 Command = AppForm.StartupPath + "\\HandBrakeCLI.exe -Z \"Very Fast 1080p30\" -i C:\\Users\\Joe\\Desktop\\Menu_GIF.gif -o " + Path.Combine(Desktop, "movie.mp4") + " & echo done";
                 cmd(Command, true, true, true);
 
-                try
-                {
-                    if (Duration(Path.Combine(Desktop, "movie.mp4")) <= 5)
+                try{
+                    if (Duration(Path.Combine(Desktop, "movie.mp4")) < 2)
                     {
-                        Console.WriteLine("Video is 5 seconds or under extending...");
+                        Console.WriteLine("Video is 2 seconds or under extending...");
                         CombineVideos();
                         Console.WriteLine("Done");
                     }
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.ToString());
+                catch (Exception ex){
                     Console.WriteLine("Error on combining videos!");
+                    Console.WriteLine(ex.ToString());    
                 }
 
-                try
-                {
+                try{
                     Directory.Delete(Path.Combine(Desktop, "Gif"), true);
                 }
-                catch
-                {
-                    Console.WriteLine("Error on removing leftover files, files might have already been deleted or are still in use.");
-                }
+                catch{}
             }
             else
             {
@@ -715,38 +714,31 @@ namespace MenuCreator
             string Desktop = Environment.GetFolderPath
                 (Environment.SpecialFolder.DesktopDirectory);
 
-            if (File.Exists(AppForm.StartupPath + "\\movie.mp4"))
-                File.Delete(AppForm.StartupPath + "\\movie.mp4");
-
             if (File.Exists(Path.Combine(AppForm.StartupPath, "movie_combined.mp4")))
-                File.Delete(Path.Combine(AppForm.StartupPath, "movie_combined.mp4"));
-            
+                File.Delete(Path.Combine(AppForm.StartupPath, "movie_combined.mp4")); 
 
-            File.Copy(Path.Combine(Desktop, "movie.mp4"), AppForm.StartupPath + "\\movie.mp4");
+            File.Move(Path.Combine(Desktop, "movie.mp4"), AppForm.StartupPath + "\\movie.mp4");
 
-            string Commands = "-safe 0 -f concat -i list.txt -c copy " + Path.Combine(AppForm.StartupPath, "movie_combined.mp4");
+            string Commands = "-safe 0 -f concat -i list.txt -c copy movie_combined.mp4";
+            cmdOutput = new StringBuilder("");
             Process p = new Process();
             p.StartInfo.FileName = AppForm.StartupPath + "\\ffmpeg.exe";
             p.StartInfo.Arguments = Commands;
             p.StartInfo.UseShellExecute = false;
-            p.StartInfo.CreateNoWindow = true;
-            p.StartInfo.RedirectStandardOutput = true;
-            p.StartInfo.Verb = "runas";
+            p.StartInfo.CreateNoWindow = false;
+            p.StartInfo.RedirectStandardOutput = false;
+            //p.StartInfo.Verb = "runas";
             p.Start();
      
             p.WaitForExit();
             p.Close();
             p.Dispose();
             p = null;
+
             if(File.Exists(Path.Combine(Desktop, "movie.mp4")))
                 File.Delete(Path.Combine(Desktop, "movie.mp4"));
 
-            File.Move(Path.Combine(AppForm.StartupPath, "movie_combined.mp4"), Path.Combine(Desktop, "movie.mp4"));
-            if (File.Exists("movie.mp4"))
-                File.Delete("movie.mp4");
-
-            if (Duration(Path.Combine(Desktop, "movie.mp4")) <= 5)
-                CombineVideos();
+            File.Copy(Path.Combine(AppForm.StartupPath, "movie_combined.mp4"), Path.Combine(Desktop, "movie.mp4"));
         }
 
         public Double Duration(String file)
@@ -986,6 +978,7 @@ namespace MenuCreator
 
         private void button10_Click(object sender, EventArgs e)
         {
+            parts.Clear();
             if (!radioButton1.Checked)
             {
                 try
@@ -1275,5 +1268,10 @@ namespace MenuCreator
         }
 
         private string[] BadWords = { "cost", "thc", "cbd", "name", "cont" };
+
+        private void button13_Click(object sender, EventArgs e)
+        {
+            Process.Start(@"Z:\Menus - OLD\Help\index.html");
+        }
     }
 }
