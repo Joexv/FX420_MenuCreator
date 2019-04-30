@@ -63,6 +63,8 @@ namespace MenuCreator
                 Menu = "Cart_Menu";
             else if (dabRadio.Checked)
                 Menu = "Dab_Menu";
+            else if (dailyRadio.Checked)
+                Menu = "Daily_Special";
             return Menu;
         }
 
@@ -70,7 +72,7 @@ namespace MenuCreator
 
         private void button2_Click(object sender, EventArgs e)
         {
-            try{ CreateMenu(); }
+            try { CreateMenu(); }
             catch
             {
                 Console.WriteLine("Menu creation failed, trying again....");
@@ -81,6 +83,51 @@ namespace MenuCreator
                 File.Delete(Output);
                 CreateMenu();
             }
+
+            if (dailyRadio.Checked)
+            {
+                DisposePictureBox();
+                CreateDailyMenu();
+            }
+        }
+
+        public void CreateDailyMenu()
+        {
+            Cursor.Current = Cursors.WaitCursor;
+            cmdOutput = new StringBuilder("");
+            string Desktop = Environment.GetFolderPath
+                (Environment.SpecialFolder.DesktopDirectory);
+            string ImageMagick = @"C:\Program Files\ImageMagick";
+
+            int X = int.Parse(xPos.Text);
+            int Y = int.Parse(yPos.Text);
+
+            string st = AppForm.StartupPath + "\\";
+
+            Console.WriteLine("Making Daily Menu All Pretty");
+            FileName = GetMenuString();
+            Output = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\" + FileName + "_" + DateTime.Today.ToString("MM-dd-yyyy") + "_.png";
+            string img = "Daily_Image.png";
+            File.Delete(img);
+            File.Delete("cut_" + img);
+            File.Move(Output, img);
+            string Command2 = String.Format(@"cd {1} & magick convert {0} +repage -shave 1x1 {0}", st + img, ImageMagick);
+            cmd(Command2, true, true, true);
+
+            File.Delete(Output);
+            File.Copy("Daily_Template.png", Output);
+
+            string e = (Y < 0) ? "" : "+";
+            string f = (X < 0) ? "" : "+";
+
+            Console.WriteLine("Editing: Daily_Image.png");
+            string Command = String.Format(@"cd {4} & magick convert {1} {0} -gravity center -geometry {6}{2}{5}{3} -composite {1}", st + img, Output, X, Y, ImageMagick, e, f);
+            Console.WriteLine(Command);
+            cmd(Command, true, true, true);
+            Cursor.Current = Cursors.Default;
+
+            PreviewImage();
+            MessageBox.Show("Done, image should be located on your desktop!");
         }
 
         public void CreateMenu()
@@ -104,7 +151,8 @@ namespace MenuCreator
                 PreviewImage();
             }
             else
-                MessageBox.Show("Excel File is missing!");
+                if (!dailyRadio.Checked)
+                     MessageBox.Show("Excel File is missing!");
             Cursor.Current = Cursors.Default;
         }
 
@@ -112,9 +160,13 @@ namespace MenuCreator
         {
             Clipboard.Clear();
             CreateImage_Alt(excelRange1.Text, excelRange2.Text);
-            ResizeImage("Menu_Small.png");
+            if (!dailyRadio.Checked)
+                ResizeImage("Menu_Small.png");
+            else
+                File.Move("Menu_Small.png", output);
+            
 
-            if (File.Exists(output))
+            if (File.Exists(output) && !dailyRadio.Checked)
                 MessageBox.Show("Image Created! It should be located on your desktop.");
             else
                 Console.WriteLine("Image creation failed....");
@@ -315,7 +367,22 @@ namespace MenuCreator
             button7.Enabled = radioButton1.Checked;
             button8.Enabled = radioButton1.Checked;
             groupBox3.Enabled = !radioButton1.Checked;
-            groupBox2.Enabled = radioButton1.Checked;
+
+            if (radioButton1.Checked)
+            {
+                groupBox2.Enabled = true;
+                fDelay.Enabled = true;
+                noExtract.Enabled = true;
+            }
+            else if (dailyRadio.Checked)
+            {
+                groupBox2.Enabled = true;
+                fDelay.Enabled = false;
+                noExtract.Enabled = false;
+            }
+            else
+                groupBox2.Enabled = false;
+
         }
 
         /*
@@ -588,7 +655,17 @@ namespace MenuCreator
 
         private void xPos_TextChanged(object sender, EventArgs e)
         {
-            Write("xPos", xPos.Text);
+            if(!dailyRadio.Checked)
+                 Write("xPos", xPos.Text);
+            else
+            {
+                var parser = new FileIniDataParser();
+                var data = parser.ReadFile("Settings.ini");
+
+                data["Daily"]["xPos"] = xPos.Text ?? "NA";
+                parser.WriteFile("Settings.ini", data);
+            }
+
         }
 
         public void Write(string Object, string Value)
@@ -602,7 +679,16 @@ namespace MenuCreator
 
         private void yPos_TextChanged(object sender, EventArgs e)
         {
-            Write("yPos", yPos.Text);
+            if (!dailyRadio.Checked)
+                Write("yPos", yPos.Text);
+            else
+            {
+                var parser = new FileIniDataParser();
+                var data = parser.ReadFile("Settings.ini");
+
+                data["Daily"]["yPos"] = yPos.Text ?? "NA";
+                parser.WriteFile("Settings.ini", data);
+            }
         }
 
         private void fDelay_TextChanged(object sender, EventArgs e)
@@ -654,6 +740,17 @@ namespace MenuCreator
                 radio_4k.Checked = true;
                 radio_1080.Checked = false;
                 radio_custom.Checked = false;
+            }
+
+            if (dailyRadio.Checked)
+            {
+                xPos.Text = ReadINI("Daily", "xPos");
+                yPos.Text = ReadINI("Daily", "yPos");
+            }
+            else
+            {
+                xPos.Text = ReadINI("Settings", "xPos");
+                yPos.Text = ReadINI("Settings", "yPos");
             }
         }
 
@@ -960,6 +1057,11 @@ namespace MenuCreator
         private void button13_Click(object sender, EventArgs e)
         {
             Process.Start("https://joexv.github.io/MenuCreatorHelp/");
+        }
+
+        private void radioButton2_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateSettings("Daily");
         }
     }
 }

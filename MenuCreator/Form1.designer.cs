@@ -70,6 +70,7 @@
             this.button11 = new System.Windows.Forms.Button();
             this.button12 = new System.Windows.Forms.Button();
             this.button13 = new System.Windows.Forms.Button();
+            this.dailyRadio = new System.Windows.Forms.RadioButton();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox2.SuspendLayout();
@@ -78,6 +79,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.dailyRadio);
             this.groupBox1.Controls.Add(this.radioButton1);
             this.groupBox1.Controls.Add(this.dabRadio);
             this.groupBox1.Controls.Add(this.cartRadio);
@@ -87,7 +89,7 @@
             this.groupBox1.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(2);
-            this.groupBox1.Size = new System.Drawing.Size(107, 129);
+            this.groupBox1.Size = new System.Drawing.Size(107, 156);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Menu";
@@ -109,7 +111,7 @@
             // dabRadio
             // 
             this.dabRadio.AutoSize = true;
-            this.dabRadio.Location = new System.Drawing.Point(4, 104);
+            this.dabRadio.Location = new System.Drawing.Point(4, 103);
             this.dabRadio.Margin = new System.Windows.Forms.Padding(2);
             this.dabRadio.Name = "dabRadio";
             this.dabRadio.Size = new System.Drawing.Size(88, 17);
@@ -346,7 +348,7 @@
             // 
             // xPos
             // 
-            this.xPos.Location = new System.Drawing.Point(31, 42);
+            this.xPos.Location = new System.Drawing.Point(31, 37);
             this.xPos.MaxLength = 5;
             this.xPos.Name = "xPos";
             this.xPos.Size = new System.Drawing.Size(62, 20);
@@ -505,7 +507,7 @@
             // button11
             // 
             this.button11.Enabled = false;
-            this.button11.Location = new System.Drawing.Point(682, 566);
+            this.button11.Location = new System.Drawing.Point(973, 622);
             this.button11.Margin = new System.Windows.Forms.Padding(2);
             this.button11.Name = "button11";
             this.button11.Size = new System.Drawing.Size(108, 40);
@@ -517,7 +519,7 @@
             // button12
             // 
             this.button12.Enabled = false;
-            this.button12.Location = new System.Drawing.Point(682, 622);
+            this.button12.Location = new System.Drawing.Point(973, 578);
             this.button12.Margin = new System.Windows.Forms.Padding(2);
             this.button12.Name = "button12";
             this.button12.Size = new System.Drawing.Size(108, 40);
@@ -536,6 +538,18 @@
             this.button13.Text = "I Need Help";
             this.button13.UseVisualStyleBackColor = true;
             this.button13.Click += new System.EventHandler(this.button13_Click);
+            // 
+            // dailyRadio
+            // 
+            this.dailyRadio.AutoSize = true;
+            this.dailyRadio.Location = new System.Drawing.Point(4, 124);
+            this.dailyRadio.Margin = new System.Windows.Forms.Padding(2);
+            this.dailyRadio.Name = "dailyRadio";
+            this.dailyRadio.Size = new System.Drawing.Size(91, 17);
+            this.dailyRadio.TabIndex = 5;
+            this.dailyRadio.Text = "Daily Specials";
+            this.dailyRadio.UseVisualStyleBackColor = true;
+            this.dailyRadio.CheckedChanged += new System.EventHandler(this.radioButton2_CheckedChanged);
             // 
             // Form1
             // 
@@ -622,6 +636,7 @@
         private System.Windows.Forms.Button button11;
         private System.Windows.Forms.Button button12;
         private System.Windows.Forms.Button button13;
+        private System.Windows.Forms.RadioButton dailyRadio;
     }
 }
 
