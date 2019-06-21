@@ -28,7 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.dailyRadio = new System.Windows.Forms.RadioButton();
             this.radioButton1 = new System.Windows.Forms.RadioButton();
             this.dabRadio = new System.Windows.Forms.RadioButton();
             this.cartRadio = new System.Windows.Forms.RadioButton();
@@ -45,6 +48,7 @@
             this.button8 = new System.Windows.Forms.Button();
             this.txtConsole = new System.Windows.Forms.TextBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.label10 = new System.Windows.Forms.Label();
             this.noExtract = new System.Windows.Forms.CheckBox();
             this.label4 = new System.Windows.Forms.Label();
             this.fDelay = new System.Windows.Forms.TextBox();
@@ -67,10 +71,21 @@
             this.excelRange1 = new System.Windows.Forms.TextBox();
             this.excelRange2 = new System.Windows.Forms.TextBox();
             this.button10 = new System.Windows.Forms.Button();
+            this.button13 = new System.Windows.Forms.Button();
+            this.button14 = new System.Windows.Forms.Button();
+            this.sF = new System.Windows.Forms.RadioButton();
+            this.sJ = new System.Windows.Forms.RadioButton();
+            this.sE = new System.Windows.Forms.RadioButton();
+            this.sC = new System.Windows.Forms.RadioButton();
+            this.sD = new System.Windows.Forms.RadioButton();
+            this.sS = new System.Windows.Forms.RadioButton();
+            this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
+            this.label9 = new System.Windows.Forms.Label();
+            this.button15 = new System.Windows.Forms.Button();
+            this.autoUpload = new System.Windows.Forms.CheckBox();
+            this.preview = new System.Windows.Forms.CheckBox();
             this.button11 = new System.Windows.Forms.Button();
             this.button12 = new System.Windows.Forms.Button();
-            this.button13 = new System.Windows.Forms.Button();
-            this.dailyRadio = new System.Windows.Forms.RadioButton();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox2.SuspendLayout();
@@ -89,10 +104,22 @@
             this.groupBox1.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(2);
-            this.groupBox1.Size = new System.Drawing.Size(107, 156);
+            this.groupBox1.Size = new System.Drawing.Size(106, 156);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Menu";
+            // 
+            // dailyRadio
+            // 
+            this.dailyRadio.AutoSize = true;
+            this.dailyRadio.Location = new System.Drawing.Point(4, 124);
+            this.dailyRadio.Margin = new System.Windows.Forms.Padding(2);
+            this.dailyRadio.Name = "dailyRadio";
+            this.dailyRadio.Size = new System.Drawing.Size(91, 17);
+            this.dailyRadio.TabIndex = 5;
+            this.dailyRadio.Text = "Daily Specials";
+            this.dailyRadio.UseVisualStyleBackColor = true;
+            this.dailyRadio.CheckedChanged += new System.EventHandler(this.radioButton2_CheckedChanged);
             // 
             // radioButton1
             // 
@@ -158,106 +185,144 @@
             // 
             // button1
             // 
+            this.button1.BackColor = System.Drawing.Color.ForestGreen;
+            this.button1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.button1.FlatAppearance.BorderColor = System.Drawing.Color.MidnightBlue;
+            this.button1.FlatAppearance.MouseDownBackColor = System.Drawing.Color.MidnightBlue;
+            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.button1.ForeColor = System.Drawing.Color.White;
             this.button1.Location = new System.Drawing.Point(10, 171);
             this.button1.Margin = new System.Windows.Forms.Padding(2);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(108, 40);
+            this.button1.Size = new System.Drawing.Size(128, 40);
             this.button1.TabIndex = 2;
             this.button1.Text = "Edit";
-            this.button1.UseVisualStyleBackColor = true;
+            this.button1.UseVisualStyleBackColor = false;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // button2
             // 
+            this.button2.BackColor = System.Drawing.Color.ForestGreen;
             this.button2.Enabled = false;
+            this.button2.FlatAppearance.BorderColor = System.Drawing.Color.MidnightBlue;
+            this.button2.FlatAppearance.MouseDownBackColor = System.Drawing.Color.MidnightBlue;
+            this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.button2.ForeColor = System.Drawing.Color.White;
             this.button2.Location = new System.Drawing.Point(10, 231);
             this.button2.Margin = new System.Windows.Forms.Padding(2);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(108, 40);
+            this.button2.Size = new System.Drawing.Size(128, 40);
             this.button2.TabIndex = 3;
             this.button2.Text = "Create Image";
-            this.button2.UseVisualStyleBackColor = true;
+            this.button2.UseVisualStyleBackColor = false;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(10, 276);
+            this.button3.BackColor = System.Drawing.Color.ForestGreen;
+            this.button3.FlatAppearance.BorderColor = System.Drawing.Color.MidnightBlue;
+            this.button3.FlatAppearance.MouseDownBackColor = System.Drawing.Color.MidnightBlue;
+            this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.button3.ForeColor = System.Drawing.Color.White;
+            this.button3.Location = new System.Drawing.Point(10, 378);
             this.button3.Margin = new System.Windows.Forms.Padding(2);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(108, 40);
+            this.button3.Size = new System.Drawing.Size(128, 40);
             this.button3.TabIndex = 4;
             this.button3.Text = "Preview";
-            this.button3.UseVisualStyleBackColor = true;
+            this.button3.UseVisualStyleBackColor = false;
             this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(10, 320);
+            this.button4.BackColor = System.Drawing.Color.ForestGreen;
+            this.button4.FlatAppearance.BorderColor = System.Drawing.Color.MidnightBlue;
+            this.button4.FlatAppearance.MouseDownBackColor = System.Drawing.Color.MidnightBlue;
+            this.button4.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.button4.ForeColor = System.Drawing.Color.White;
+            this.button4.Location = new System.Drawing.Point(10, 422);
             this.button4.Margin = new System.Windows.Forms.Padding(2);
             this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(108, 40);
+            this.button4.Size = new System.Drawing.Size(128, 40);
             this.button4.TabIndex = 5;
             this.button4.Text = "Open WebPage";
-            this.button4.UseVisualStyleBackColor = true;
+            this.button4.UseVisualStyleBackColor = false;
             this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
             // pictureBox1
             // 
             this.pictureBox1.BackColor = System.Drawing.Color.White;
             this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBox1.Location = new System.Drawing.Point(121, 11);
+            this.pictureBox1.Location = new System.Drawing.Point(143, 13);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(960, 540);
+            this.pictureBox1.Size = new System.Drawing.Size(1002, 540);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 6;
             this.pictureBox1.TabStop = false;
+            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
             // 
             // button5
             // 
-            this.button5.Location = new System.Drawing.Point(10, 517);
+            this.button5.BackColor = System.Drawing.Color.ForestGreen;
+            this.button5.FlatAppearance.MouseDownBackColor = System.Drawing.Color.MidnightBlue;
+            this.button5.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.button5.ForeColor = System.Drawing.Color.White;
+            this.button5.Location = new System.Drawing.Point(10, 608);
             this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(106, 35);
+            this.button5.Size = new System.Drawing.Size(95, 35);
             this.button5.TabIndex = 7;
-            this.button5.Text = "Upload and run video";
-            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Text = "Upload Video";
+            this.button5.UseVisualStyleBackColor = false;
             this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
             // button6
             // 
-            this.button6.Location = new System.Drawing.Point(10, 558);
+            this.button6.BackColor = System.Drawing.Color.Maroon;
+            this.button6.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.button6.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.button6.ForeColor = System.Drawing.Color.White;
+            this.button6.Location = new System.Drawing.Point(10, 518);
             this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(106, 35);
+            this.button6.Size = new System.Drawing.Size(128, 35);
             this.button6.TabIndex = 8;
             this.button6.Text = "Reboot TV";
-            this.button6.UseVisualStyleBackColor = true;
+            this.button6.UseVisualStyleBackColor = false;
             this.button6.Click += new System.EventHandler(this.button6_Click);
             // 
             // button7
             // 
-            this.button7.Location = new System.Drawing.Point(10, 476);
+            this.button7.BackColor = System.Drawing.Color.ForestGreen;
+            this.button7.FlatAppearance.MouseDownBackColor = System.Drawing.Color.MidnightBlue;
+            this.button7.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.button7.ForeColor = System.Drawing.Color.White;
+            this.button7.Location = new System.Drawing.Point(111, 567);
             this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(106, 35);
+            this.button7.Size = new System.Drawing.Size(97, 35);
             this.button7.TabIndex = 9;
             this.button7.Text = "End Video";
-            this.button7.UseVisualStyleBackColor = true;
+            this.button7.UseVisualStyleBackColor = false;
             this.button7.Click += new System.EventHandler(this.button7_Click);
             // 
             // button8
             // 
-            this.button8.Location = new System.Drawing.Point(10, 435);
+            this.button8.BackColor = System.Drawing.Color.ForestGreen;
+            this.button8.FlatAppearance.MouseDownBackColor = System.Drawing.Color.MidnightBlue;
+            this.button8.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.button8.ForeColor = System.Drawing.Color.White;
+            this.button8.Location = new System.Drawing.Point(10, 567);
             this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(106, 35);
+            this.button8.Size = new System.Drawing.Size(95, 35);
             this.button8.TabIndex = 10;
             this.button8.Text = "Create Video";
-            this.button8.UseVisualStyleBackColor = true;
+            this.button8.UseVisualStyleBackColor = false;
             this.button8.Click += new System.EventHandler(this.button8_Click);
             // 
             // txtConsole
             // 
             this.txtConsole.BackColor = System.Drawing.SystemColors.InactiveCaptionText;
             this.txtConsole.ForeColor = System.Drawing.SystemColors.ControlLight;
-            this.txtConsole.Location = new System.Drawing.Point(1086, 11);
+            this.txtConsole.Location = new System.Drawing.Point(1150, 11);
             this.txtConsole.Multiline = true;
             this.txtConsole.Name = "txtConsole";
             this.txtConsole.Size = new System.Drawing.Size(325, 653);
@@ -265,6 +330,7 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.label10);
             this.groupBox2.Controls.Add(this.noExtract);
             this.groupBox2.Controls.Add(this.label4);
             this.groupBox2.Controls.Add(this.fDelay);
@@ -273,12 +339,21 @@
             this.groupBox2.Controls.Add(this.label1);
             this.groupBox2.Controls.Add(this.yPos);
             this.groupBox2.Controls.Add(this.xPos);
-            this.groupBox2.Location = new System.Drawing.Point(122, 558);
+            this.groupBox2.Location = new System.Drawing.Point(214, 567);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(240, 106);
             this.groupBox2.TabIndex = 12;
             this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Video Customization";
+            this.groupBox2.Text = "Customization";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(11, 40);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(14, 13);
+            this.label10.TabIndex = 8;
+            this.label10.Text = "X";
             // 
             // noExtract
             // 
@@ -330,7 +405,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(11, 45);
+            this.label1.Location = new System.Drawing.Point(-20, 49);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(14, 13);
             this.label1.TabIndex = 2;
@@ -371,7 +446,7 @@
             this.groupBox3.Controls.Add(this.excelRange1);
             this.groupBox3.Controls.Add(this.excelRange2);
             this.groupBox3.Enabled = false;
-            this.groupBox3.Location = new System.Drawing.Point(368, 558);
+            this.groupBox3.Location = new System.Drawing.Point(460, 567);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(309, 106);
             this.groupBox3.TabIndex = 13;
@@ -495,70 +570,215 @@
             // 
             // button10
             // 
-            this.button10.Location = new System.Drawing.Point(11, 364);
+            this.button10.BackColor = System.Drawing.Color.ForestGreen;
+            this.button10.FlatAppearance.BorderColor = System.Drawing.Color.MidnightBlue;
+            this.button10.FlatAppearance.MouseDownBackColor = System.Drawing.Color.MidnightBlue;
+            this.button10.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.button10.ForeColor = System.Drawing.Color.White;
+            this.button10.Location = new System.Drawing.Point(10, 334);
             this.button10.Margin = new System.Windows.Forms.Padding(2);
             this.button10.Name = "button10";
-            this.button10.Size = new System.Drawing.Size(108, 40);
+            this.button10.Size = new System.Drawing.Size(127, 40);
             this.button10.TabIndex = 14;
             this.button10.Text = "Print Menu As List";
-            this.button10.UseVisualStyleBackColor = true;
+            this.button10.UseVisualStyleBackColor = false;
             this.button10.Click += new System.EventHandler(this.button10_Click);
-            // 
-            // button11
-            // 
-            this.button11.Enabled = false;
-            this.button11.Location = new System.Drawing.Point(973, 622);
-            this.button11.Margin = new System.Windows.Forms.Padding(2);
-            this.button11.Name = "button11";
-            this.button11.Size = new System.Drawing.Size(108, 40);
-            this.button11.TabIndex = 15;
-            this.button11.Text = "Exceless Editor";
-            this.button11.UseVisualStyleBackColor = true;
-            this.button11.Click += new System.EventHandler(this.button11_Click_1);
-            // 
-            // button12
-            // 
-            this.button12.Enabled = false;
-            this.button12.Location = new System.Drawing.Point(973, 578);
-            this.button12.Margin = new System.Windows.Forms.Padding(2);
-            this.button12.Name = "button12";
-            this.button12.Size = new System.Drawing.Size(108, 40);
-            this.button12.TabIndex = 16;
-            this.button12.Text = "Create File For Exceless Edits";
-            this.button12.UseVisualStyleBackColor = true;
-            this.button12.Click += new System.EventHandler(this.button12_Click);
             // 
             // button13
             // 
-            this.button13.Location = new System.Drawing.Point(10, 615);
+            this.button13.BackColor = System.Drawing.Color.ForestGreen;
+            this.button13.FlatAppearance.MouseDownBackColor = System.Drawing.Color.MidnightBlue;
+            this.button13.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.button13.ForeColor = System.Drawing.Color.White;
+            this.button13.Location = new System.Drawing.Point(10, 672);
             this.button13.Margin = new System.Windows.Forms.Padding(2);
             this.button13.Name = "button13";
-            this.button13.Size = new System.Drawing.Size(108, 40);
+            this.button13.Size = new System.Drawing.Size(198, 25);
             this.button13.TabIndex = 17;
             this.button13.Text = "I Need Help";
-            this.button13.UseVisualStyleBackColor = true;
+            this.button13.UseVisualStyleBackColor = false;
             this.button13.Click += new System.EventHandler(this.button13_Click);
             // 
-            // dailyRadio
+            // button14
             // 
-            this.dailyRadio.AutoSize = true;
-            this.dailyRadio.Location = new System.Drawing.Point(4, 124);
-            this.dailyRadio.Margin = new System.Windows.Forms.Padding(2);
-            this.dailyRadio.Name = "dailyRadio";
-            this.dailyRadio.Size = new System.Drawing.Size(91, 17);
-            this.dailyRadio.TabIndex = 5;
-            this.dailyRadio.Text = "Daily Specials";
-            this.dailyRadio.UseVisualStyleBackColor = true;
-            this.dailyRadio.CheckedChanged += new System.EventHandler(this.radioButton2_CheckedChanged);
+            this.button14.BackColor = System.Drawing.Color.ForestGreen;
+            this.button14.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.button14.ForeColor = System.Drawing.Color.White;
+            this.button14.Location = new System.Drawing.Point(775, 593);
+            this.button14.Name = "button14";
+            this.button14.Size = new System.Drawing.Size(122, 42);
+            this.button14.TabIndex = 18;
+            this.button14.Text = "Edit Specials Template";
+            this.button14.UseVisualStyleBackColor = false;
+            this.button14.Click += new System.EventHandler(this.button14_Click);
+            // 
+            // sF
+            // 
+            this.sF.AutoCheck = false;
+            this.sF.AutoSize = true;
+            this.sF.Location = new System.Drawing.Point(124, 30);
+            this.sF.Name = "sF";
+            this.sF.Size = new System.Drawing.Size(14, 13);
+            this.sF.TabIndex = 19;
+            this.sF.TabStop = true;
+            this.sF.UseVisualStyleBackColor = true;
+            // 
+            // sJ
+            // 
+            this.sJ.AutoCheck = false;
+            this.sJ.AutoSize = true;
+            this.sJ.Location = new System.Drawing.Point(124, 51);
+            this.sJ.Name = "sJ";
+            this.sJ.Size = new System.Drawing.Size(14, 13);
+            this.sJ.TabIndex = 20;
+            this.sJ.TabStop = true;
+            this.sJ.UseVisualStyleBackColor = true;
+            // 
+            // sE
+            // 
+            this.sE.AutoCheck = false;
+            this.sE.AutoSize = true;
+            this.sE.Location = new System.Drawing.Point(124, 73);
+            this.sE.Name = "sE";
+            this.sE.Size = new System.Drawing.Size(14, 13);
+            this.sE.TabIndex = 21;
+            this.sE.TabStop = true;
+            this.sE.UseVisualStyleBackColor = true;
+            // 
+            // sC
+            // 
+            this.sC.AutoCheck = false;
+            this.sC.AutoSize = true;
+            this.sC.Location = new System.Drawing.Point(124, 95);
+            this.sC.Name = "sC";
+            this.sC.Size = new System.Drawing.Size(14, 13);
+            this.sC.TabIndex = 22;
+            this.sC.TabStop = true;
+            this.sC.UseVisualStyleBackColor = true;
+            // 
+            // sD
+            // 
+            this.sD.AutoCheck = false;
+            this.sD.AutoSize = true;
+            this.sD.Location = new System.Drawing.Point(124, 116);
+            this.sD.Name = "sD";
+            this.sD.Size = new System.Drawing.Size(14, 13);
+            this.sD.TabIndex = 23;
+            this.sD.TabStop = true;
+            this.sD.UseVisualStyleBackColor = true;
+            // 
+            // sS
+            // 
+            this.sS.AutoCheck = false;
+            this.sS.AutoSize = true;
+            this.sS.Location = new System.Drawing.Point(124, 137);
+            this.sS.Name = "sS";
+            this.sS.Size = new System.Drawing.Size(14, 13);
+            this.sS.TabIndex = 24;
+            this.sS.TabStop = true;
+            this.sS.UseVisualStyleBackColor = true;
+            // 
+            // notifyIcon1
+            // 
+            this.notifyIcon1.BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Error;
+            this.notifyIcon1.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon1.Icon")));
+            this.notifyIcon1.Text = "notifyIcon1";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(106, 13);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(32, 13);
+            this.label9.TabIndex = 25;
+            this.label9.Text = "Is On";
+            // 
+            // button15
+            // 
+            this.button15.BackColor = System.Drawing.Color.ForestGreen;
+            this.button15.FlatAppearance.MouseDownBackColor = System.Drawing.Color.MidnightBlue;
+            this.button15.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.button15.ForeColor = System.Drawing.Color.White;
+            this.button15.Location = new System.Drawing.Point(111, 608);
+            this.button15.Name = "button15";
+            this.button15.Size = new System.Drawing.Size(97, 35);
+            this.button15.TabIndex = 26;
+            this.button15.Text = "Run Video";
+            this.button15.UseVisualStyleBackColor = false;
+            this.button15.Click += new System.EventHandler(this.button15_Click);
+            // 
+            // autoUpload
+            // 
+            this.autoUpload.AutoSize = true;
+            this.autoUpload.Checked = true;
+            this.autoUpload.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.autoUpload.Location = new System.Drawing.Point(13, 276);
+            this.autoUpload.Name = "autoUpload";
+            this.autoUpload.Size = new System.Drawing.Size(125, 17);
+            this.autoUpload.TabIndex = 27;
+            this.autoUpload.Text = "Automatically Upload";
+            this.autoUpload.UseVisualStyleBackColor = true;
+            this.autoUpload.CheckedChanged += new System.EventHandler(this.autoUpload_CheckedChanged);
+            // 
+            // preview
+            // 
+            this.preview.AutoSize = true;
+            this.preview.Checked = true;
+            this.preview.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.preview.Location = new System.Drawing.Point(13, 299);
+            this.preview.Name = "preview";
+            this.preview.Size = new System.Drawing.Size(101, 30);
+            this.preview.TabIndex = 28;
+            this.preview.Text = "Preview Before \r\nUploading?";
+            this.preview.UseVisualStyleBackColor = true;
+            this.preview.CheckedChanged += new System.EventHandler(this.preview_CheckedChanged);
+            // 
+            // button11
+            // 
+            this.button11.BackColor = System.Drawing.Color.ForestGreen;
+            this.button11.FlatAppearance.MouseDownBackColor = System.Drawing.Color.MidnightBlue;
+            this.button11.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.button11.ForeColor = System.Drawing.Color.White;
+            this.button11.Location = new System.Drawing.Point(10, 645);
+            this.button11.Margin = new System.Windows.Forms.Padding(2);
+            this.button11.Name = "button11";
+            this.button11.Size = new System.Drawing.Size(198, 25);
+            this.button11.TabIndex = 29;
+            this.button11.Text = "All Vid Commands";
+            this.button11.UseVisualStyleBackColor = false;
+            this.button11.Click += new System.EventHandler(this.button11_Click_2);
+            // 
+            // button12
+            // 
+            this.button12.Location = new System.Drawing.Point(966, 578);
+            this.button12.Name = "button12";
+            this.button12.Size = new System.Drawing.Size(101, 65);
+            this.button12.TabIndex = 30;
+            this.button12.Text = "button12";
+            this.button12.UseVisualStyleBackColor = true;
+            this.button12.Visible = false;
+            this.button12.Click += new System.EventHandler(this.button11_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1418, 676);
-            this.Controls.Add(this.button13);
+            this.BackColor = System.Drawing.SystemColors.Control;
+            this.ClientSize = new System.Drawing.Size(1487, 708);
             this.Controls.Add(this.button12);
             this.Controls.Add(this.button11);
+            this.Controls.Add(this.preview);
+            this.Controls.Add(this.autoUpload);
+            this.Controls.Add(this.button15);
+            this.Controls.Add(this.label9);
+            this.Controls.Add(this.sS);
+            this.Controls.Add(this.sD);
+            this.Controls.Add(this.button14);
+            this.Controls.Add(this.sC);
+            this.Controls.Add(this.button13);
+            this.Controls.Add(this.sE);
+            this.Controls.Add(this.sJ);
+            this.Controls.Add(this.sF);
             this.Controls.Add(this.button10);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
@@ -581,6 +801,7 @@
             this.Text = "Menu Creator";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
+            this.Shown += new System.EventHandler(this.Form1_Shown);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
@@ -633,10 +854,23 @@
         private System.Windows.Forms.TextBox excelRange2;
         private System.Windows.Forms.Button button9;
         private System.Windows.Forms.Button button10;
-        private System.Windows.Forms.Button button11;
-        private System.Windows.Forms.Button button12;
         private System.Windows.Forms.Button button13;
         private System.Windows.Forms.RadioButton dailyRadio;
+        private System.Windows.Forms.Button button14;
+        private System.Windows.Forms.RadioButton sF;
+        private System.Windows.Forms.RadioButton sS;
+        private System.Windows.Forms.RadioButton sD;
+        private System.Windows.Forms.RadioButton sC;
+        private System.Windows.Forms.RadioButton sE;
+        private System.Windows.Forms.RadioButton sJ;
+        private System.Windows.Forms.NotifyIcon notifyIcon1;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Button button15;
+        private System.Windows.Forms.CheckBox autoUpload;
+        private System.Windows.Forms.CheckBox preview;
+        private System.Windows.Forms.Button button11;
+        private System.Windows.Forms.Button button12;
     }
 }
 
