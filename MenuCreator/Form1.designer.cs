@@ -86,6 +86,7 @@
             this.preview = new System.Windows.Forms.CheckBox();
             this.button11 = new System.Windows.Forms.Button();
             this.button12 = new System.Windows.Forms.Button();
+            this.button16 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox2.SuspendLayout();
@@ -260,7 +261,6 @@
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 6;
             this.pictureBox1.TabStop = false;
-            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
             // 
             // button5
             // 
@@ -604,7 +604,7 @@
             this.button14.BackColor = System.Drawing.Color.ForestGreen;
             this.button14.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.button14.ForeColor = System.Drawing.Color.White;
-            this.button14.Location = new System.Drawing.Point(775, 593);
+            this.button14.Location = new System.Drawing.Point(775, 574);
             this.button14.Name = "button14";
             this.button14.Size = new System.Drawing.Size(122, 42);
             this.button14.TabIndex = 18;
@@ -759,12 +759,26 @@
             this.button12.Visible = false;
             this.button12.Click += new System.EventHandler(this.button11_Click);
             // 
+            // button16
+            // 
+            this.button16.BackColor = System.Drawing.Color.ForestGreen;
+            this.button16.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.button16.ForeColor = System.Drawing.Color.White;
+            this.button16.Location = new System.Drawing.Point(775, 628);
+            this.button16.Name = "button16";
+            this.button16.Size = new System.Drawing.Size(122, 42);
+            this.button16.TabIndex = 31;
+            this.button16.Text = "Restore missing files";
+            this.button16.UseVisualStyleBackColor = false;
+            this.button16.Click += new System.EventHandler(this.button16_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(1487, 708);
+            this.Controls.Add(this.button16);
             this.Controls.Add(this.button12);
             this.Controls.Add(this.button11);
             this.Controls.Add(this.preview);
@@ -871,6 +885,7 @@
         private System.Windows.Forms.CheckBox preview;
         private System.Windows.Forms.Button button11;
         private System.Windows.Forms.Button button12;
+        private System.Windows.Forms.Button button16;
     }
 }
 

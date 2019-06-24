@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Costura.Fody.3.3.3\build\Costura.Fody.props" Condition="Exists('..\packages\Costura.Fody.3.3.3\build\Costura.Fody.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -54,6 +55,9 @@
     </StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Costura, Version=3.3.3.0, Culture=neutral, PublicKeyToken=9919ef960d84173d, processorArchitecture=MSIL">
+      <HintPath>..\packages\Costura.Fody.3.3.3\lib\net40\Costura.dll</HintPath>
+    </Reference>
     <Reference Include="INIFileParser, Version=2.5.2.0, Culture=neutral, PublicKeyToken=79af7b307b65cf3c, processorArchitecture=MSIL">
       <HintPath>..\packages\ini-parser.2.5.2\lib\net20\INIFileParser.dll</HintPath>
     </Reference>
@@ -116,6 +120,16 @@
       <DependentUpon>ExcelessEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Files\Settings.ini" />
+    <EmbeddedResource Include="Files\Blank.xlsx" />
+    <EmbeddedResource Include="Files\Cart_Menu.xlsx" />
+    <EmbeddedResource Include="Files\Dab_menu.xlsx" />
+    <EmbeddedResource Include="Files\Daily_Special.xlsx" />
+    <EmbeddedResource Include="Files\Edible_Menu.xlsx" />
+    <EmbeddedResource Include="Files\Joint_Menu.xlsx" />
+    <EmbeddedResource Include="Files\Premade.ini" />
+    <EmbeddedResource Include="Files\Template_36.xlsx" />
+    <EmbeddedResource Include="Files\Template_40.xlsx" />
+    <EmbeddedResource Include="Files\Template_44.xlsx" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -157,6 +171,9 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Files\Daily_Image.png" />
+    <EmbeddedResource Include="Files\Daily_Template.png" />
+    <EmbeddedResource Include="Files\StrainMenuCreator.exe" />
     <Content Include="MenuManager.csproj">
       <SubType>Designer</SubType>
     </Content>
@@ -188,7 +205,15 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_UseUniversalClock="True" BuildVersion_AssemblyInfoFilename="Properties\AssemblyInfo.cs" BuildVersion_ConfigurationName="Release" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_StartDate="2019/1/1" />
+      <UserProperties BuildVersion_StartDate="2019/1/1" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_ConfigurationName="Release" BuildVersion_AssemblyInfoFilename="Properties\AssemblyInfo.cs" BuildVersion_UseUniversalClock="True" />
     </VisualStudio>
   </ProjectExtensions>
+  <Import Project="..\packages\Fody.4.2.1\build\Fody.targets" Condition="Exists('..\packages\Fody.4.2.1\build\Fody.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Fody.4.2.1\build\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Fody.4.2.1\build\Fody.targets'))" />
+    <Error Condition="!Exists('..\packages\Costura.Fody.3.3.3\build\Costura.Fody.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Costura.Fody.3.3.3\build\Costura.Fody.props'))" />
+  </Target>
 </Project>
