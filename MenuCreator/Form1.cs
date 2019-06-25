@@ -407,6 +407,8 @@ namespace MenuCreator
 #endif
             if (Process.GetProcessesByName("MenuCreator").Count() > 1)
                 this.Close();
+            if (!File.Exists("Settings.ini"))
+                Extract("MenuCreator", AppForm.StartupPath, "Files", "Settings.ini");
             File.Delete("Menu_Small.png");
 
             _writer = new TextBoxStreamWriter(txtConsole);
@@ -1492,7 +1494,7 @@ namespace MenuCreator
             {
                 backupFiles();
                 foreach (string file in fileArr)
-                    Extract("MenuCreator", Path.Combine(AppForm.StartupPath, file), "Files", file);
+                    Extract("MenuCreator", AppForm.StartupPath, "Files", file);
             }
             else
                 Console.WriteLine("Restore canceled");
@@ -1504,7 +1506,7 @@ namespace MenuCreator
             Directory.CreateDirectory(backupDir);
             foreach(string file in fileArr)
                 if (File.Exists(file))
-                    File.Move(file, Path.Combine(backupDir, DateTime.Now.ToString("MM-dd-YYYY_") + file));
+                    File.Move(file, Path.Combine(backupDir, DateTime.Now.ToString("MM-dd-yyyy_") + file));
         }
     }
 
