@@ -378,7 +378,7 @@ namespace MenuCreator
 
         private void button4_Click(object sender, EventArgs e)
         {
-            Process.Start(@"Z:\Menus - OLD\Menu Manager\index.html");
+            Process.Start(@"Z:\Menus\Menu Manager\index.html");
         }
 
         private string GetIP()
@@ -1440,7 +1440,7 @@ namespace MenuCreator
             switch (cmd.ToLower())
             {
                 case "dabs":
-                    return "Dab_menu";
+                    return "Dab_Menu";
                 case "carts":
                     return "Cart_Menu";
                 case "edibles":
@@ -1448,7 +1448,7 @@ namespace MenuCreator
                 case "joints":
                     return "Joint_Menu";
                 case "dab":
-                    return "Dab_menu";
+                    return "Dab_Menu";
                 case "cart":
                     return "Cart_Menu";
                 case "edible":
@@ -1456,7 +1456,7 @@ namespace MenuCreator
                 case "joint":
                     return "Joint_Menu";
                 case "d":
-                    return "Dab_menu";
+                    return "Dab_Menu";
                 case "c":
                     return "Cart_Menu";
                 case "e":
@@ -1499,7 +1499,7 @@ namespace MenuCreator
                 Console.WriteLine("Restore canceled");
         }
         //List of all needed files
-        string[] fileArr = { "Settings.ini", "Daily_Special.xlsx", "Daily_Image.png", "Edible_Menu.xlsx", "Dab_menu.xlsx", "Joint_Menu.xlsx", "Cart_Menu.xlsx", "Template_36.xlsx", "Template_40.xlsx", "Premade.ini", "StrainMenuCreator.exe"};
+        string[] fileArr = { "Settings.ini", "Daily_Special.xlsx", "Daily_Image.png", "Edible_Menu.xlsx", "Dab_Menu.xlsx", "Joint_Menu.xlsx", "Cart_Menu.xlsx", "Template_36.xlsx", "Template_40.xlsx", "Premade.ini", "StrainMenuCreator.exe"};
         string backupDir = AppForm.StartupPath + "\\Backup\\";
         private void backupFiles() {
             Directory.CreateDirectory(backupDir);
