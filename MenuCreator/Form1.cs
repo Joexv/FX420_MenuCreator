@@ -447,12 +447,11 @@ namespace MenuCreator
             if (radioButton1.Checked || dailyRadio.Checked)
             {
                 groupBox2.Enabled = true;
-                groupBox3.Enabled = true;
                 fDelay.Enabled = radioButton1.Checked;
                 noExtract.Enabled = radioButton1.Checked;
             }
             else
-                groupBox2.Enabled = false; groupBox3.Enabled = false;
+                groupBox2.Enabled = false;
 
         }
 
