@@ -26,3 +26,16 @@ C:\Users\2meirl4meirl\Documents\GitHub\FX420_MenuCreator\MenuCreator\obj\Release
 C:\Users\2meirl4meirl\Documents\GitHub\FX420_MenuCreator\MenuCreator\obj\Release\MenuCreator.csproj.CopyComplete
 C:\Users\2meirl4meirl\Documents\GitHub\FX420_MenuCreator\MenuCreator\obj\Release\MenuCreator.exe
 C:\Users\2meirl4meirl\Documents\GitHub\FX420_MenuCreator\MenuCreator\obj\Release\MenuCreator.pdb
+C:\Users\Joe\Documents\GitHub\FX420_MenuCreator\MenuCreator\obj\Release\MenuCreator.csprojAssemblyReference.cache
+C:\Users\Joe\Documents\GitHub\FX420_MenuCreator\MenuCreator\obj\Release\Interop.Microsoft.Office.Core.dll
+C:\Users\Joe\Documents\GitHub\FX420_MenuCreator\MenuCreator\obj\Release\Interop.WMPLib.dll
+C:\Users\Joe\Documents\GitHub\FX420_MenuCreator\MenuCreator\obj\Release\MenuCreator.csproj.ResolveComReference.cache
+C:\Users\Joe\Documents\GitHub\FX420_MenuCreator\MenuCreator\obj\Release\MenuCreator.Properties.Resources.resources
+C:\Users\Joe\Documents\GitHub\FX420_MenuCreator\MenuCreator\obj\Release\MenuCreator.ExcelessEditor.ExcelessEditor.resources
+C:\Users\Joe\Documents\GitHub\FX420_MenuCreator\MenuCreator\obj\Release\MenuCreator.Form1.resources
+C:\Users\Joe\Documents\GitHub\FX420_MenuCreator\MenuCreator\obj\Release\MenuCreator.csproj.GenerateResource.cache
+C:\Users\Joe\Documents\GitHub\FX420_MenuCreator\MenuCreator\obj\Release\MenuCreator.csproj.CoreCompileInputs.cache
+C:\Users\Joe\Documents\GitHub\FX420_MenuCreator\MenuCreator\obj\Release\MenuCreator.csproj.Fody.CopyLocal.cache
+C:\Users\Joe\Documents\GitHub\FX420_MenuCreator\MenuCreator\obj\Release\MenuCreator.csproj.CopyComplete
+C:\Users\Joe\Documents\GitHub\FX420_MenuCreator\MenuCreator\obj\Release\MenuCreator.exe
+C:\Users\Joe\Documents\GitHub\FX420_MenuCreator\MenuCreator\obj\Release\MenuCreator.pdb

@@ -26,6 +26,7 @@ using System.Windows.Forms;
 using WMPLib;
 using AppForm = System.Windows.Forms.Application;
 using Excel = Microsoft.Office.Interop.Excel;
+//Dont you just love all of these references?
 
 namespace MenuCreator
 {
@@ -64,9 +65,7 @@ namespace MenuCreator
             }
         }
 
-        //Create Image
         public string FileLocation;
-
         public string XLSX;
         public string FileName;
         public string Output;
@@ -792,11 +791,16 @@ namespace MenuCreator
 
         private void UpdateSettings(string Object)
         {
+            //This check should theoretically stop the program from crashing when Windows disconnects from the NAS drive *Should*
+            if (!File.Exists(AppForm.StartupPath + @"\Settings.ini"))
+                restoreConnection();
+            
             excelRange1.Text = ReadINI(Object, "Range1").ToUpper();
             excelRange2.Text = ReadINI(Object, "Range2").ToUpper();
             cSizeH.Text = ReadINI(Object, "cH");
             cSizeW.Text = ReadINI(Object, "cW");
             string RadioCheck = ReadINI(Object, "Size");
+            //TBH im not sure why I have the custom option, I don't think I even check for it during the resizing process
             if (RadioCheck.ToUpper() == "4K")
             {
                 radio_4k.Checked = true;
@@ -904,7 +908,6 @@ namespace MenuCreator
 
         //Creates a basic excel sheet to print out.
         //I need to figure out a better way of doing this. I feel like an excel file isn't the best, but at the same time a basic txt document wouldn't be able to have two rows on each page.
-        //But those two rows on each page cause issues by themselves
         private void button10_Click(object sender, EventArgs e)
         {
             parts.Clear();
@@ -924,8 +927,6 @@ namespace MenuCreator
                     Worksheet ws = w.Sheets[1];
                     ws.Protect(Contents: false);
                     Console.WriteLine("Menu Loaded");
-                    //Console.WriteLine(GetNum(excelRange2.Text));
-                    //Console.WriteLine(excelRange2.Text.Substring(1));
                     int c = GetNum(excelRange2.Text);
                     Console.WriteLine(c);
                     int r = Int32.Parse(excelRange2.Text.Substring((c >= 28 ? 2 : 1)));
@@ -1075,6 +1076,8 @@ namespace MenuCreator
         private const String APP_ID = "MenuCreator";
         private void OnElapsed(object sender, ElapsedEventArgs e)
         {
+            //Restore connection to NAS drive and Ping the menus
+            restoreConnection();
             PingAll();
         }
 
@@ -1102,6 +1105,7 @@ namespace MenuCreator
                 Noti("Error!", "One or more of the menus could not be pinged!");
         }
 
+        //I could never get toast notifications to work, but this works too
         private void Noti(string Title, string Message)
         {
             notifyIcon1.BalloonTipTitle = Title;
@@ -1499,7 +1503,7 @@ namespace MenuCreator
                 Console.WriteLine("Restore canceled");
         }
         //List of all needed files
-        string[] fileArr = { "Settings.ini", "Daily_Special.xlsx", "Daily_Image.png", "Edible_Menu.xlsx", "Dab_Menu.xlsx", "Joint_Menu.xlsx", "Cart_Menu.xlsx", "Template_36.xlsx", "Template_40.xlsx", "Premade.ini", "StrainMenuCreator.exe"};
+        string[] fileArr = { "Settings.ini", "Daily_Special.xlsx", "Daily_Image.png", "Edible_Menu.xlsx", "Dab_Menu.xlsx", "Joint_Menu.xlsx", "Cart_Menu.xlsx", "Template_36.xlsx", "Template_40.xlsx", "Premade.ini", "StrainMenuCreator.exe", "Blank.xlsx", "Daily_Template.png"};
         string backupDir = AppForm.StartupPath + "\\Backup\\";
         private void backupFiles() {
             Directory.CreateDirectory(backupDir);
