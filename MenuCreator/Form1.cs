@@ -468,7 +468,7 @@ namespace MenuCreator
                 try
                 {
                     Console.WriteLine("Uploading movie.mp4");
-                    SFTPUpload(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\movie.mp4", @"/home/pi/screenly_assets/movie.mp4");
+                    SFTPUpload(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\movie.mp4", @"/home/pi/screenly_assets/movie.mp4", GetIP());
                     Console.WriteLine("Done");
                 }
                 catch (Exception ex) { Console.WriteLine(ex.ToString()); }
@@ -509,13 +509,15 @@ namespace MenuCreator
 
         private void button6_Click(object sender, EventArgs e)
         {
-            SSH("sudo reboot", GetIP());
+            //This needs a try catch, just because as soon as the Raspberry reboots it throws a no connection exception, even though that's what we want.
+            try{ SSH("sudo reboot", GetIP()); }
+            catch { }
         }
 
         private void button7_Click(object sender, EventArgs e)
         {
             var task = Task.Run(() => {
-                SSH(@"sudo kill -9 `pgrep omxplayer` & echo done", "192.168.1.112"); });
+                SSH(@"sudo kill -9 `pgrep omxplayer` & echo done", GetIP()); });
             bool didTimeOut = task.Wait(TimeSpan.FromMilliseconds(10000));
             if (didTimeOut)
                 Console.WriteLine("Timed out");
@@ -636,12 +638,13 @@ namespace MenuCreator
 
                 //Merges the just created frames into one GIF
                 Console.WriteLine("Recreating GIF");
-                Command = String.Format(@"cd {0} & magick convert -delay {1} -loop 0 {2} {3}", ImageMagick, fDelay.Text, Path.Combine(Desktop, "Gif\\Target-*.png"), Path.Combine(Desktop, "Menu_GIF.gif"));
+                Command = String.Format(@"cd {0} & magick convert -delay {1} -loop 0 {2} {3} & echo done", ImageMagick, fDelay.Text, Path.Combine(Desktop, "Gif\\Target-*.png"), Path.Combine(Desktop, "Menu_GIF.gif"));
                 cmd(Command, true, true, true);
 
                 //Converts GIF to mp4
                 Console.WriteLine("Creating mp4 file out of GIF");
-                Command = String.Format(AppForm.StartupPath + "\\HandBrakeCLI.exe -z \"Very Fast 1080p30\" -i {0} -o {1} & echo done", Path.Combine(Desktop, "Menu_GIF.gif"), Path.Combine(Desktop, "movie.mp4"));
+                //Preset seemed to be causing issues, leaving it on default
+                Command = String.Format(AppForm.StartupPath + "\\HandBrakeCLI.exe -i {0} -o {1} & echo done", Path.Combine(Desktop, "Menu_GIF.gif"), Path.Combine(Desktop, "movie.mp4"));
                 cmd(Command, true, true, true);
 
                 //Lengthens MP4 if its under 2 seconds as OMXPlayer refuses to load it if its too short
@@ -657,9 +660,6 @@ namespace MenuCreator
                     Console.WriteLine("Error on combining videos!\nYou may have to manually lengthen the video with a program such as ShoutCut");
                     Console.WriteLine(ex.ToString());
                 }
-
-                try { Directory.Delete(Path.Combine(Desktop, "Gif"), true); }
-                catch { }
             }
             else
                 MessageBox.Show("The menu needs to be on your desktop exactly as it was when it was created, and your gif needs to be on your desktop named 'insert.gif'.");
@@ -1131,7 +1131,7 @@ namespace MenuCreator
             try
             {
                 var task = Task.Run(() => {
-                    SSH(@"sudo -u pi nohup omxplayer /home/pi/screenly_assets/movie.mp4 --loop >/dev/null 2>&1 & echo done", "192.168.1.112");
+                    SSH(@"sudo -u pi nohup omxplayer /home/pi/screenly_assets/movie.mp4 --loop >/dev/null 2>&1 & echo done", GetIP());
                 });
 
                 if (!task.Wait(TimeSpan.FromMilliseconds(10000)))
