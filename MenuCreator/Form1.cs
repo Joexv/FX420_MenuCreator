@@ -439,18 +439,26 @@ namespace MenuCreator
         private void radioButton1_CheckedChanged(object sender, EventArgs e)
         {
             button2.Enabled = !radioButton1.Checked;
-            button5.Enabled = radioButton1.Checked;
-            button7.Enabled = radioButton1.Checked;
-            button8.Enabled = radioButton1.Checked;
+            groupBox3.Enabled = !radioButton1.Checked;
 
             if (radioButton1.Checked || dailyRadio.Checked)
             {
                 groupBox2.Enabled = true;
-                fDelay.Enabled = radioButton1.Checked;
-                noExtract.Enabled = radioButton1.Checked;
+                fDelay.Enabled = true;
+                noExtract.Enabled = true;
+                button7.Enabled = true;
+                button5.Enabled = true;
+                button15.Enabled = true;
+                button8.Enabled = true;
             }
             else
+            {
                 groupBox2.Enabled = false;
+                button7.Enabled = false;
+                button5.Enabled = false;
+                button15.Enabled = false;
+                button8.Enabled = false;
+            }
 
         }
 
