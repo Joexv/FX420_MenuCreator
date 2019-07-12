@@ -918,6 +918,11 @@ namespace MenuCreator
         //I need to figure out a better way of doing this. I feel like an excel file isn't the best, but at the same time a basic txt document wouldn't be able to have two rows on each page.
         private void button10_Click(object sender, EventArgs e)
         {
+            PrintMenu();
+        }
+
+        private void PrintMenu()
+        {
             parts.Clear();
             if (!radioButton1.Checked)
             {
@@ -955,8 +960,7 @@ namespace MenuCreator
                 finally { CreateExcel(); }
             }
             else
-                MessageBox.Show("To print the Flower menu press 'Edit' and then Print Menu under the Flower Menu Editor");
-            //Need to migrate the printer code from the strain menu creator over here to save having to jump back and forth between the two.
+                PrintFlower();
         }
 
         private void CreateExcel()
@@ -1001,10 +1005,12 @@ namespace MenuCreator
             {
                 string input = str.ToString().ToLower();
                 input = input.Replace(".", "");
-
+                //Checks for useless cells, split into multiple ifs for readability
                 if (input == "a" || input == "cost" || input == "cbd" || input == "thc" || input == "name" || input.Contains("cont") || input == "4oz" || input == "1oz")
                     return true;
-                else if (input == "edibles" || input == "joints" || input == "cartridges" || input == "concentrates")
+                else if (input == "edibles" || input == "joints" || input == "cartridges" || input == "concentrates" || input.Contains("--->"))
+                    return true;
+                else if (input == "blue - indica" || input =="green - hybrid" || input == "orange - cbd heavy" || input == "red - sativa")
                     return true;
                 else
                     return IsDigitsOnly(input);
@@ -1518,6 +1524,45 @@ namespace MenuCreator
             foreach(string file in fileArr)
                 if (File.Exists(file))
                     File.Move(file, Path.Combine(backupDir, DateTime.Now.ToString("MM-dd-yyyy_") + file));
+        }
+
+        private void button17_Click(object sender, EventArgs e)
+        {
+            jointRadio.Checked = true;
+            PrintMenu();
+            Thread.Sleep(2000);
+            dabRadio.Checked = true;
+            PrintMenu();
+            Thread.Sleep(2000);
+            cartRadio.Checked = true;
+            PrintMenu();
+            Thread.Sleep(2000);
+            edibleRadio.Checked = true;
+            PrintMenu();
+            Thread.Sleep(2000);
+            radioButton1.Checked = true;
+            PrintMenu();
+        }
+
+        public void PrintFlower()
+        {
+            File.Delete("Print.txt");
+            parts.Clear();
+            var parser = new FileIniDataParser();
+            var data = parser.ReadFile("Premade.ini");
+            int Total = Int32.Parse(data["Settings"]["Total"]);
+            parts.Add("---Flower---");
+            for (int i = 1; i <= Total; i++){
+                parts.Add(data["Flower"][i.ToString()]);}
+            parts.Add("");
+            parts.Add("---Ounces---");
+            var data2 = parser.ReadFile("Ounces.ini");
+            Total = Int32.Parse(data2["Settings"]["Total"]);
+            for (int i = 1; i <= Total; i++){
+                parts.Add(data2["Name"][i.ToString()]);}
+
+            File.AppendAllLines("Print.txt", parts);
+            SendToPrinter("Print.txt");
         }
     }
 
