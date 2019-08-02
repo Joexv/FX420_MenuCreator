@@ -26,7 +26,6 @@ using System.Windows.Forms;
 using WMPLib;
 using AppForm = System.Windows.Forms.Application;
 using Excel = Microsoft.Office.Interop.Excel;
-//Dont you just love all of these references?
 
 namespace MenuCreator
 {
@@ -65,7 +64,9 @@ namespace MenuCreator
             }
         }
 
+        //Create Image
         public string FileLocation;
+
         public string XLSX;
         public string FileName;
         public string Output;
@@ -89,10 +90,11 @@ namespace MenuCreator
         }
 
         public bool Export_1080p = false;
-        public string webURL = @"/home/pi/screenly_assets/";
+        public string webURL = "http://192.168.1.210/manage/shares/Server/Menus/MenuCreator/Uploads/";
 
         private void button2_Click(object sender, EventArgs e)
         {
+            Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\MenuImages\\");
             try { CreateMenu(); }
             catch
             {
@@ -100,7 +102,7 @@ namespace MenuCreator
                 DisposePictureBox();
                 File.Delete("Menu_Small.png");
                 FileName = GetMenuString();
-                Output = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\" + FileName + "_" + DateTime.Today.ToString("MM-dd-yyyy") + "_.png";
+                Output = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\MenuImages\\" + FileName + "_" + DateTime.Today.ToString("MM-dd-yyyy") + "_.png";
                 File.Delete(Output);
                 CreateMenu();
             }
@@ -116,7 +118,7 @@ namespace MenuCreator
                 webURL = @"/home/pi/screenly_assets/AUTOMATED_" + DateTime.Now.ToString("MM-dd-yyyy_hhmm");
                 string Output =
                     Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) +
-                    "\\" + GetMenuString() + "_" + DateTime.Today.ToString("MM-dd-yyyy") + "_.png";
+                    "\\MenuImages\\" + GetMenuString() + "_" + DateTime.Today.ToString("MM-dd-yyyy") + "_.png";
 
                 Console.WriteLine(Output);
                 Console.WriteLine(webURL);
@@ -164,7 +166,7 @@ namespace MenuCreator
 
             Console.WriteLine("Making Daily Menu All Pretty");
             FileName = GetMenuString();
-            Output = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\" + FileName + "_" + DateTime.Today.ToString("MM-dd-yyyy") + "_.png";
+            Output = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\MenuImages\\" + FileName + "_" + DateTime.Today.ToString("MM-dd-yyyy") + "_.png";
             string img = "Daily_Image.png";
             File.Delete(img);
             File.Delete("cut_" + img);
@@ -201,7 +203,7 @@ namespace MenuCreator
             DisposePictureBox();
             FileName = GetMenuString();
             XLSX = FileName + ".xlsx";
-            Output = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\" + FileName + "_" + DateTime.Today.ToString("MM-dd-yyyy") + "_.png";
+            Output = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\MenuImages\\" + FileName + "_" + DateTime.Today.ToString("MM-dd-yyyy") + "_.png";
             FileLocation = AppForm.StartupPath + "\\" + XLSX;
             File.Delete(Output);
             if (File.Exists(XLSX)) {
@@ -368,7 +370,7 @@ namespace MenuCreator
             try
             {
                 string ImageLocation = Environment.GetFolderPath
-                                           (Environment.SpecialFolder.DesktopDirectory) + "\\" + GetMenuString() + "_" +
+                                           (Environment.SpecialFolder.DesktopDirectory) + "\\MenuImages\\" + GetMenuString() + "_" +
                                        DateTime.Today.ToString("MM-dd-yyyy") + "_.png";
                 pictureBox1.Image = Image.FromFile(ImageLocation);
             }
@@ -377,7 +379,7 @@ namespace MenuCreator
 
         private void button4_Click(object sender, EventArgs e)
         {
-            Process.Start(@"Z:\Menus\Menu Manager\index.html");
+            Process.Start(@"Z:\Menus - OLD\Menu Manager\index.html");
         }
 
         private string GetIP()
@@ -407,7 +409,8 @@ namespace MenuCreator
             if (Process.GetProcessesByName("MenuCreator").Count() > 1)
                 this.Close();
             if (!File.Exists("Settings.ini"))
-                Extract("MenuCreator", AppForm.StartupPath, "Files", "Settings.ini");
+                Extract("MenuCreator", System.Windows.Forms.Application.StartupPath, "Files", "Settings.ini");
+
             File.Delete("Menu_Small.png");
 
             _writer = new TextBoxStreamWriter(txtConsole);
@@ -417,48 +420,38 @@ namespace MenuCreator
             yPos.Text = ReadINI("Settings", "yPos");
             fDelay.Text = ReadINI("Settings", "fDelay");
 
-            restoreConnection();
-
-            foreach(string file in fileArr)
-                if (!File.Exists(file))
-                    Console.WriteLine(file + " is missing!");
-        }
-
-        //Restores proper connection to local server. This is done due to Windows not consistatly restoring the connection on its own.
-        private void restoreConnection()
-        {
             Process p = new Process();
             p.StartInfo.FileName = "explorer.exe";
-            p.StartInfo.Arguments = @"\\192.168.1.210\Server\Menus";
+            p.StartInfo.Arguments = @"\\192.168.1.210\Server\Menus\";
             p.Start();
-            p.WaitForInputIdle(100);
             p.Kill();
             p.Dispose();
+
+            Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\MenuImages\\");
         }
 
         private void radioButton1_CheckedChanged(object sender, EventArgs e)
         {
             button2.Enabled = !radioButton1.Checked;
+            button5.Enabled = radioButton1.Checked;
+            button7.Enabled = radioButton1.Checked;
+            button8.Enabled = radioButton1.Checked;
             groupBox3.Enabled = !radioButton1.Checked;
 
-            if (radioButton1.Checked || dailyRadio.Checked)
+            if (radioButton1.Checked)
             {
                 groupBox2.Enabled = true;
                 fDelay.Enabled = true;
                 noExtract.Enabled = true;
-                button7.Enabled = true;
-                button5.Enabled = true;
-                button15.Enabled = true;
-                button8.Enabled = true;
+            }
+            else if (dailyRadio.Checked)
+            {
+                groupBox2.Enabled = true;
+                fDelay.Enabled = false;
+                noExtract.Enabled = false;
             }
             else
-            {
                 groupBox2.Enabled = false;
-                button7.Enabled = false;
-                button5.Enabled = false;
-                button15.Enabled = false;
-                button8.Enabled = false;
-            }
 
         }
 
@@ -470,13 +463,13 @@ namespace MenuCreator
 
         private void button5_Click(object sender, EventArgs e)
         {
-            if (File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\movie.mp4"))
+            if (File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\MenuImages\\movie.mp4"))
             {
                 Cursor.Current = Cursors.WaitCursor;
                 try
                 {
                     Console.WriteLine("Uploading movie.mp4");
-                    SFTPUpload(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\movie.mp4", @"/home/pi/screenly_assets/movie.mp4", GetIP());
+                    SFTPUpload(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\MenuImages\\movie.mp4", @"/home/pi/screenly_assets/movie.mp4");
                     Console.WriteLine("Done");
                 }
                 catch (Exception ex) { Console.WriteLine(ex.ToString()); }
@@ -515,22 +508,28 @@ namespace MenuCreator
             }
         }
 
+        private void ScpUpload(string filePath, string destinationFilePath, string host = "192.168.1.112", int port = 22, string username = "pi", string password = "raspberry")
+        {
+            ConnectionInfo connInfo = new ConnectionInfo(host, username, new PasswordAuthenticationMethod(username, password));
+            using (var scp = new ScpClient(connInfo))
+            {
+                scp.Connect();
+                scp.Upload(new FileInfo(filePath), destinationFilePath);
+                scp.Disconnect();
+            }
+            Console.WriteLine("Upload function done");
+        }
+
         private void button6_Click(object sender, EventArgs e)
         {
-            //This needs a try catch, just because as soon as the Raspberry reboots it throws a no connection exception, even though that's what we want.
-            try{ SSH("sudo reboot", GetIP()); }
-            catch { }
+            SSH("sudo reboot", GetIP());
         }
 
         private void button7_Click(object sender, EventArgs e)
         {
             var task = Task.Run(() => {
-                SSH(@"sudo kill -9 `pgrep omxplayer` & echo done", GetIP()); });
-            bool didTimeOut = task.Wait(TimeSpan.FromMilliseconds(10000));
-            if (didTimeOut)
-                Console.WriteLine("Timed out");
-            else
-                Console.WriteLine("Done");
+                SSH(@"sudo kill -9 `pgrep omxplayer` & echo done", "192.168.1.112"); });
+            bool isCompletedSuccessfully = task.Wait(TimeSpan.FromMilliseconds(10000));
         }
 
         public void cmd(string Arguments, bool isHidden = false, bool waitForexit = true, bool redirect = true)
@@ -574,7 +573,7 @@ namespace MenuCreator
 
         private bool BootTooBig()
         {
-            string fileLocation = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\Menu_" + DateTime.Today.ToString("MM-dd-yyyy") + "_.png";
+            string fileLocation = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\MenuImages\\Menu_" + DateTime.Today.ToString("MM-dd-yyyy") + "_.png";
             using (Image img = Image.FromFile(fileLocation))
             {
                 if (img.Width > 1920 || img.Height > 1080)
@@ -603,25 +602,28 @@ namespace MenuCreator
 
         private void VideoCreation()
         {
+            Cursor.Current = Cursors.WaitCursor;
             cmdOutput = new StringBuilder("");
             string Desktop = Environment.GetFolderPath
                 (Environment.SpecialFolder.DesktopDirectory);
             string ImageMagick = @"C:\Program Files\ImageMagick";
-            Output = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\Menu_" + DateTime.Today.ToString("MM-dd-yyyy") + "_.png";
-            if (File.Exists(Path.Combine(Desktop, Output)) && File.Exists(Path.Combine(Desktop, "Insert.gif")))
+            Output = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\MenuImages\\Menu_" + DateTime.Today.ToString("MM-dd-yyyy") + "_.png";
+            if (File.Exists(Output) && File.Exists(Path.Combine(Desktop, "\\MenuImages\\Insert.gif")))
             {
-                string Command = "";
+                String Command = "";
                 if (!noExtract.Checked)
                 {
-                    try{ Directory.Delete(Path.Combine(Desktop, "Gif"), true); } catch { Console.WriteLine("No old GIF files to removed"); }
-
-                    //Extract GIF to desktop
+                    try
+                    {
+                        Directory.Delete(Path.Combine(Desktop, "Gif"), true);
+                        Console.WriteLine("Deleted old GIF");
+                    }
+                    catch { }
+                    Console.WriteLine("Both the GIF and menu are located extracting gif");
                     Directory.CreateDirectory(Path.Combine(Desktop, "Gif"));
-                    Command = String.Format(@"cd {0} & magick convert -coalesce {1} {2}", ImageMagick, Path.Combine(Desktop, "Insert.gif"), Path.Combine(Desktop, "Gif\\Target.png"));
+                    Command = @"cd " + ImageMagick + " & magick convert -coalesce " + Path.Combine(Desktop, "\\MenuImages\\Insert.gif") + " " + Path.Combine(Desktop, "Gif\\Target.png");
                     cmd(Command, true, true, true);
                     Console.WriteLine("GIF Extracted");
-
-                    //Fix naming issues causing frames to be out of order. Simply adds a 0 to files with a number under 10
                     int i = 0;
                     string Target = Path.Combine(Desktop, "Gif");
                     while (i < 10)
@@ -633,31 +635,28 @@ namespace MenuCreator
                         i++;
                     }
 
-                    //Combines the Menu with each GIF frame in order to make one large GIF. Is there an easier way to handle this? Almost definately
                     foreach (string img in Directory.GetFiles(Path.Combine(Desktop, "Gif"), "*.png"))
                     {
                         string X = xPos.Text;
                         string Y = yPos.Text;
                         Console.WriteLine("Editing: " + img);
-                        Command = String.Format(@"cd {0} & magick convert {1} {2} -gravity southeast -geometry +{3}+{4} -composite {2}", ImageMagick, Output, img, X, Y);
+                        Command = @"cd " + ImageMagick + " & magick convert " + Output + " " + img +
+                                  " -gravity southeast -geometry +" + X + "+" + Y + " -composite " + img;
                         cmd(Command, true, true, true);
                     }
                 }
 
-                //Merges the just created frames into one GIF
                 Console.WriteLine("Recreating GIF");
-                Command = String.Format(@"cd {0} & magick convert -delay {1} -loop 0 {2} {3} & echo done", ImageMagick, fDelay.Text, Path.Combine(Desktop, "Gif\\Target-*.png"), Path.Combine(Desktop, "Menu_GIF.gif"));
+                Command = @"cd " + ImageMagick + " & magick convert -delay " + fDelay.Text + " -loop 0 " + Path.Combine(Desktop, "Gif\\Target-*.png") + " C:\\Users\\Joe\\Desktop\\MenuImages\\Menu_GIF.gif";
                 cmd(Command, true, true, true);
 
-                //Converts GIF to mp4
+                Console.WriteLine(Path.Combine(Desktop, "\\MenuImages\\Output_Gif_" + DateTime.Today.ToString("MM-dd-yyyy")) + ".gif");
                 Console.WriteLine("Creating mp4 file out of GIF");
-                //Preset seemed to be causing issues, leaving it on default
-                Command = String.Format(AppForm.StartupPath + "\\HandBrakeCLI.exe -i {0} -o {1} & echo done", Path.Combine(Desktop, "Menu_GIF.gif"), Path.Combine(Desktop, "movie.mp4"));
+                Command = AppForm.StartupPath + "\\HandBrakeCLI.exe -Z \"Very Fast 1080p30\" -i C:\\Users\\Joe\\Desktop\\MenuImages\\Menu_GIF.gif -o " + Path.Combine(Desktop, "MenuImages\\movie.mp4") + " & echo done";
                 cmd(Command, true, true, true);
 
-                //Lengthens MP4 if its under 2 seconds as OMXPlayer refuses to load it if its too short
                 try {
-                    if (Duration(Path.Combine(Desktop, "movie.mp4")) < 2)
+                    if (Duration(Path.Combine(Desktop, "\\MenuImages\\movie.mp4")) < 2)
                     {
                         Console.WriteLine("Video is 2 seconds or under extending...");
                         CombineVideos();
@@ -665,9 +664,12 @@ namespace MenuCreator
                     }
                 }
                 catch (Exception ex) {
-                    Console.WriteLine("Error on combining videos!\nYou may have to manually lengthen the video with a program such as ShoutCut");
+                    Console.WriteLine("Error on combining videos!");
                     Console.WriteLine(ex.ToString());
                 }
+
+                try { Directory.Delete(Path.Combine(Desktop, "Gif"), true); }
+                catch { }
             }
             else
                 MessageBox.Show("The menu needs to be on your desktop exactly as it was when it was created, and your gif needs to be on your desktop named 'insert.gif'.");
@@ -679,8 +681,8 @@ namespace MenuCreator
         {
             string Desktop = Environment.GetFolderPath
                 (Environment.SpecialFolder.DesktopDirectory);
-            File.Delete("movie_combined.mp4");
-            File.Move(Path.Combine(Desktop, "movie.mp4"), AppForm.StartupPath + "\\movie.mp4");
+            File.Delete(Path.Combine(AppForm.StartupPath, "movie_combined.mp4"));
+            File.Move(Path.Combine(Desktop, "\\MenuImages\\movie.mp4"), AppForm.StartupPath + "\\movie.mp4");
 
             string Commands = "-safe 0 -f concat -i list.txt -c copy movie_combined.mp4";
             cmdOutput = new StringBuilder("");
@@ -695,7 +697,8 @@ namespace MenuCreator
             p.Dispose();
             p = null;
 
-            File.Move(Path.Combine(AppForm.StartupPath, "movie_combined.mp4"), Path.Combine(Desktop, "movie.mp4"));
+            File.Delete(Path.Combine(Desktop, "\\MenuImages\\movie.mp4"));
+            File.Move(Path.Combine(AppForm.StartupPath, "movie_combined.mp4"), Path.Combine(Desktop, "\\MenuImages\\movie.mp4"));
         }
 
         public Double Duration(String file)
@@ -799,16 +802,11 @@ namespace MenuCreator
 
         private void UpdateSettings(string Object)
         {
-            //This check should theoretically stop the program from crashing when Windows disconnects from the NAS drive *Should*
-            if (!File.Exists(AppForm.StartupPath + @"\Settings.ini"))
-                restoreConnection();
-            
             excelRange1.Text = ReadINI(Object, "Range1").ToUpper();
             excelRange2.Text = ReadINI(Object, "Range2").ToUpper();
             cSizeH.Text = ReadINI(Object, "cH");
             cSizeW.Text = ReadINI(Object, "cW");
             string RadioCheck = ReadINI(Object, "Size");
-            //TBH im not sure why I have the custom option, I don't think I even check for it during the resizing process
             if (RadioCheck.ToUpper() == "4K")
             {
                 radio_4k.Checked = true;
@@ -902,7 +900,7 @@ namespace MenuCreator
         public string Merge(int Num_Letter, int Num)
         => (GetLetter(Num_Letter) + Num.ToString());
 
-        //Doesnt support higher than AA at the moment. Not a priority to expand compatability
+
         public int GetNum(string Range)
         {
             if (Range.Substring(0, 2).ToLower() == "aa")
@@ -914,14 +912,7 @@ namespace MenuCreator
 
         private List<string> parts = new List<string>();
 
-        //Creates a basic excel sheet to print out.
-        //I need to figure out a better way of doing this. I feel like an excel file isn't the best, but at the same time a basic txt document wouldn't be able to have two rows on each page.
         private void button10_Click(object sender, EventArgs e)
-        {
-            PrintMenu();
-        }
-
-        private void PrintMenu()
         {
             parts.Clear();
             if (!radioButton1.Checked)
@@ -940,6 +931,8 @@ namespace MenuCreator
                     Worksheet ws = w.Sheets[1];
                     ws.Protect(Contents: false);
                     Console.WriteLine("Menu Loaded");
+                    //Console.WriteLine(GetNum(excelRange2.Text));
+                    //Console.WriteLine(excelRange2.Text.Substring(1));
                     int c = GetNum(excelRange2.Text);
                     Console.WriteLine(c);
                     int r = Int32.Parse(excelRange2.Text.Substring((c >= 28 ? 2 : 1)));
@@ -957,10 +950,10 @@ namespace MenuCreator
                     excel.Quit();
                 }
                 catch (Exception ex) { Console.WriteLine(ex.ToString()); }
-                finally { CreateExcel(); }
+                CreateExcel();
             }
             else
-                PrintFlower();
+                MessageBox.Show("To print the Flower menu press 'Edit' and then Print Menu under the Flower Menu Editor");
         }
 
         private void CreateExcel()
@@ -979,24 +972,26 @@ namespace MenuCreator
             foreach (var value in parts)
             {
                 i++;
-                if (i >= 45) //This is just an arbitrary number, nothing significant about it. But it dictates the amount of lines before it will jump to the next column
+                if (i >= 45)
                 {
                     i = 1;
                     k++;
                 }
                 ws.Cells[i, k].Value = value;
-                int test = 0;
-                Int32.TryParse(value.Substring(0, 1), out test);
-                ws.Cells[i, k].Font.Size = 8;
-                //Changes cell to Bold if the first character is a number, indicating it is a company and not a product
-                if(test != 0)
-                  ws.Cells[i, k].Font.Bold = true;
+                try
+                {
+                    int test = Int32.Parse(value.Substring(0, 1));
+                    ws.Cells[i, k].Font.Size = 8;
+                    ws.Cells[i, k].Font.Bold = true;
+                }
+                catch { ws.Cells[i, k].Font.Size = 8; }
             }
             w.Save();
             w.Close();
             excel.Quit();
             Console.WriteLine("Printing to default printer");
             SendToPrinter(excelFile);
+            //PrintExcel(excelFile);
         }
 
         private bool FilterString(object str)
@@ -1005,17 +1000,46 @@ namespace MenuCreator
             {
                 string input = str.ToString().ToLower();
                 input = input.Replace(".", "");
-                //Checks for useless cells, split into multiple ifs for readability
+
                 if (input == "a" || input == "cost" || input == "cbd" || input == "thc" || input == "name" || input.Contains("cont") || input == "4oz" || input == "1oz")
                     return true;
-                else if (input == "edibles" || input == "joints" || input == "cartridges" || input == "concentrates" || input.Contains("--->"))
-                    return true;
-                else if (input == "blue - indica" || input =="green - hybrid" || input == "orange - cbd heavy" || input == "red - sativa")
+                else if (input == "edibles" || input == "joints" || input == "cartridges" || input == "concentrates")
                     return true;
                 else
                     return IsDigitsOnly(input);
             }
             catch { return true; }
+        }
+
+        public void PrintExcel(string fileName)
+        {
+            Excel.Application xlexcel = new Excel.Application();
+            Workbook xlWorkBook = xlexcel.Workbooks.Open(fileName);
+            Worksheet xlWorkSheet = xlWorkBook.Sheets[1];
+            Range xlRange = xlWorkSheet.UsedRange;
+            object misValue = System.Reflection.Missing.Value;
+            // Get the current printer
+            string Defprinter = null;
+            Defprinter = xlexcel.ActivePrinter;
+
+            // Setup our sheet
+            var _with1 = xlWorkSheet.PageSetup;
+            // Landscape orientation
+            //_with1.Orientation = Excel.XlPageOrientation.xlLandscape;
+            // Fit Sheet on One Page 
+            _with1.FitToPagesWide = 2;
+            _with1.FitToPagesTall = 1;
+            // Normal Margins
+            _with1.LeftMargin = xlexcel.InchesToPoints(0.7);
+            _with1.RightMargin = xlexcel.InchesToPoints(0.7);
+            _with1.TopMargin = xlexcel.InchesToPoints(0.75);
+            _with1.BottomMargin = xlexcel.InchesToPoints(0.75);
+            _with1.HeaderMargin = xlexcel.InchesToPoints(0.3);
+            _with1.FooterMargin = xlexcel.InchesToPoints(0.3);
+
+            // Print the range
+            xlRange.PrintOutEx(misValue, misValue, misValue, misValue,
+            misValue, misValue, misValue, misValue);
         }
 
         private void SendToPrinter(string File)
@@ -1046,6 +1070,115 @@ namespace MenuCreator
                         return false;
             return true;
         }
+
+        #region Excelless Editor, unused atm. Probably will never use
+        private void button11_Click_1(object sender, EventArgs e)
+        {
+            ExcelessEditor.ExcelessEditor frm = new ExcelessEditor.ExcelessEditor();
+            frm.MenuName = GetMenuString();
+            frm.Show();
+        }
+        private char[] alph = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray();
+        private List<string> Companys = new List<string> { };
+
+        private void button12_Click(object sender, EventArgs e)
+        {
+            DialogResult dialogResult = MessageBox.Show("This will delete any existing files being used by the exceless editor! Only do this if it crashes or if the excel file has been updated more recently than the editor!", "Confirm", MessageBoxButtons.YesNo);
+            if (dialogResult == DialogResult.Yes)
+            {
+                if (!radioButton1.Checked)
+                {
+                    try
+                    {
+                        foreach (var process in Process.GetProcessesByName("EXCEL"))
+                        {
+                            process.Kill();
+                            process.WaitForExit();
+                        }
+
+                        Console.WriteLine("Creating files needed for exceless editor....");
+                        string excelFile = AppForm.StartupPath + "\\" + GetMenuString() + ".xlsx";
+                        string companyFile = AppForm.StartupPath + "\\" + GetMenuString() + "_Companys.txt";
+                        string iniFile = AppForm.StartupPath + "\\" + GetMenuString() + "_Products.ini";
+
+                        File.Delete(iniFile);
+
+                        using (FileStream fs = File.Create(iniFile)) { }
+
+                        Companys.Clear();
+                        parts.Clear();
+                        var parser = new FileIniDataParser();
+                        var data = parser.ReadFile(iniFile);
+
+                        Excel.Application excel = new Excel.Application();
+                        Workbook w = excel.Workbooks.Open(excelFile);
+                        Worksheet ws = w.Sheets[1];
+                        ws.Protect(Contents: false);
+                        Console.WriteLine("Menu Loaded");
+                        int c = GetNum(excelRange2.Text);
+                        int r = Int32.Parse(excelRange2.Text.Substring(1));
+                        string lastComp = "";
+                        for (int i = 1; i < c; i++)
+                        {
+                            for (int a = 1; a <= r; a++)
+                            {
+                                var cellValue = (ws.Cells[a, i] as Range).Value;
+                                //Oof
+                                if (cellValue != null &&
+                                    !checkString(cellValue.ToString()) &&
+                                    cellValue.ToString() != " " &&
+                                    cellValue.ToString() != "" &&
+                                    cellValue.ToString() != "Concentrates" &&
+                                    cellValue.ToString() != "Cartridges" &&
+                                    !IsDigitsOnly(cellValue.ToString()))
+                                {//The fuck is this crap
+                                    if (cellValue.ToString().Contains(":"))
+                                    {
+                                        var cellValue1 = (ws.Cells[a, i + 1] as Range).Value;
+                                        var cellValue2 = (ws.Cells[a, i + 2] as Range).Value;
+                                        string formatted = cellValue.ToString().Replace(": ", ":");
+                                        if (cellValue1 != null)
+                                            formatted += ":" + cellValue1.ToString();
+                                        if (cellValue2 != null)
+                                            formatted += ":" + cellValue2.ToString();
+                                        parts.Add(formatted);
+                                    }
+                                    else
+                                    {
+                                        if (lastComp != "")
+                                        {
+                                            foreach (string p in parts)
+                                                data[lastComp.Split(':')[1]][p.Split(':')[0].ToUpper()] = p;
+
+                                            parser.WriteFile(iniFile, data);
+                                        }
+                                        Companys.Add(cellValue.ToString().Replace(". ", ":"));
+                                        lastComp = cellValue.ToString().Replace(". ", ":");
+                                        parts.Clear();
+                                    }
+                                }
+                            }
+                        }
+                        File.WriteAllText(companyFile, String.Join("\n", Companys));
+                        w.Close(false);
+                        excel.Quit();
+                    }
+                    catch (Exception ex) { Console.WriteLine(ex.ToString()); }
+                }
+                else
+                    MessageBox.Show("The Flower menu is already exceless!!");
+            }
+        }
+        #endregion
+        private bool checkString(string toCheck)
+        {
+            foreach (string s in BadWords)
+                if (toCheck.ToLower().Contains(s))
+                    return true;
+            return false;
+        }
+
+        private string[] BadWords = { "cost", "thc", "cbd", "name", "cont" };
 
         private void button13_Click(object sender, EventArgs e)
         {
@@ -1079,7 +1212,7 @@ namespace MenuCreator
                 PingReply reply = pinger.Send(IP);
                 pingable = reply.Status == IPStatus.Success;
             }
-            catch { }
+            catch (PingException ex) { }
             finally { if (pinger != null) { pinger.Dispose(); } }
 
             if (!pingable)
@@ -1090,8 +1223,6 @@ namespace MenuCreator
         private const String APP_ID = "MenuCreator";
         private void OnElapsed(object sender, ElapsedEventArgs e)
         {
-            //Restore connection to NAS drive and Ping the menus
-            restoreConnection();
             PingAll();
         }
 
@@ -1119,7 +1250,6 @@ namespace MenuCreator
                 Noti("Error!", "One or more of the menus could not be pinged!");
         }
 
-        //I could never get toast notifications to work, but this works too
         private void Noti(string Title, string Message)
         {
             notifyIcon1.BalloonTipTitle = Title;
@@ -1145,13 +1275,18 @@ namespace MenuCreator
             try
             {
                 var task = Task.Run(() => {
-                    SSH(@"sudo -u pi nohup omxplayer /home/pi/screenly_assets/movie.mp4 --loop >/dev/null 2>&1 & echo done", GetIP());
+                    SSH(@"sudo -u pi nohup omxplayer /home/pi/screenly_assets/movie.mp4 --loop >/dev/null 2>&1 & echo done", "192.168.1.112");
                 });
 
                 if (!task.Wait(TimeSpan.FromMilliseconds(10000)))
                     MessageBox.Show("SSH command timed out at 10 seconds. If video is not playing try uploading again and replaying. Make sure video is over 3 seconds long otherwise it will not play!!!");
             }
             catch (Exception ex) { Console.WriteLine(ex.ToString()); }
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+
         }
 
         private void button11_Click(object sender, EventArgs e)
@@ -1166,7 +1301,7 @@ namespace MenuCreator
             DisposePictureBox();
 
             string Output = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) +
-                "\\" + GetMenuString() + "_" + DateTime.Today.ToString("MM-dd-yyyy") + "_.png";
+                "\\MenuImages\\" + GetMenuString() + "_" + DateTime.Today.ToString("MM-dd-yyyy") + "_.png";
             SFTPUpload(Output, @"/home/pi/screenly_assets/AUTOMATED", "192.168.1.67");
             Upload(@"/home/pi/screenly_assets/AUTOMATED", "192.168.1.67");
         }
@@ -1248,7 +1383,6 @@ namespace MenuCreator
                 Console.WriteLine(i.ToString());
         }
 
-        #region These functions are used by my slack bot via command line. Unfinished and not very tested
         private void removeProduct(string cmdLine) { }
 
         private void createMenu(string cmdLine) { }
@@ -1458,7 +1592,7 @@ namespace MenuCreator
             switch (cmd.ToLower())
             {
                 case "dabs":
-                    return "Dab_Menu";
+                    return "Dab_menu";
                 case "carts":
                     return "Cart_Menu";
                 case "edibles":
@@ -1466,7 +1600,7 @@ namespace MenuCreator
                 case "joints":
                     return "Joint_Menu";
                 case "dab":
-                    return "Dab_Menu";
+                    return "Dab_menu";
                 case "cart":
                     return "Cart_Menu";
                 case "edible":
@@ -1474,7 +1608,7 @@ namespace MenuCreator
                 case "joint":
                     return "Joint_Menu";
                 case "d":
-                    return "Dab_Menu";
+                    return "Dab_menu";
                 case "c":
                     return "Cart_Menu";
                 case "e":
@@ -1502,73 +1636,8 @@ namespace MenuCreator
 
         private string read(Product pdt)
             => String.Format("{0} {1} {2} {3} {4} {5} {6}", pdt.Name, pdt.Cost, pdt.Company, pdt.Letter, pdt.THC, pdt.CBD, pdt.Type);
-        #endregion
-
-        private void button16_Click(object sender, EventArgs e)
-        {
-            DialogResult dialogResult = MessageBox.Show("This process will extract the files needed to operate smoothly. Are you sure you want to continue?", "WARNING THIS WILL DELETE IMPORTANT FILES PERMANENTLY", MessageBoxButtons.YesNo);
-            if (dialogResult == DialogResult.Yes)
-            {
-                backupFiles();
-                foreach (string file in fileArr)
-                    Extract("MenuCreator", AppForm.StartupPath, "Files", file);
-            }
-            else
-                Console.WriteLine("Restore canceled");
-        }
-        //List of all needed files
-        string[] fileArr = { "Settings.ini", "Daily_Special.xlsx", "Daily_Image.png", "Edible_Menu.xlsx", "Dab_Menu.xlsx", "Joint_Menu.xlsx", "Cart_Menu.xlsx", "Template_36.xlsx", "Template_40.xlsx", "Premade.ini", "StrainMenuCreator.exe", "Blank.xlsx", "Daily_Template.png"};
-        string backupDir = AppForm.StartupPath + "\\Backup\\";
-        private void backupFiles() {
-            Directory.CreateDirectory(backupDir);
-            foreach(string file in fileArr)
-                if (File.Exists(file))
-                    File.Move(file, Path.Combine(backupDir, DateTime.Now.ToString("MM-dd-yyyy_") + file));
-        }
-
-        private void button17_Click(object sender, EventArgs e)
-        {
-            jointRadio.Checked = true;
-            PrintMenu();
-            Thread.Sleep(2000);
-            dabRadio.Checked = true;
-            PrintMenu();
-            Thread.Sleep(2000);
-            cartRadio.Checked = true;
-            PrintMenu();
-            Thread.Sleep(2000);
-            edibleRadio.Checked = true;
-            PrintMenu();
-            Thread.Sleep(2000);
-            radioButton1.Checked = true;
-            PrintMenu();
-        }
-
-        public void PrintFlower()
-        {
-            File.Delete("Print.txt");
-            parts.Clear();
-            var parser = new FileIniDataParser();
-            var data = parser.ReadFile("Premade.ini");
-            int Total = Int32.Parse(data["Settings"]["Total"]);
-            parts.Add("---Flower---");
-            for (int i = 1; i <= Total; i++){
-                parts.Add(data["Flower"][i.ToString()]);}
-            parts.Add("");
-            parts.Add("---Ounces---");
-            var data2 = parser.ReadFile("Ounces.ini");
-            Total = Int32.Parse(data2["Settings"]["Total"]);
-            for (int i = 1; i <= Total; i++){
-                parts.Add(data2["Name"][i.ToString()]);}
-
-            File.AppendAllLines("Print.txt", parts);
-            SendToPrinter("Print.txt");
-        }
     }
 
-    //Asset and Device classes used for uploading directly to Screenly OSE. 
-    //Huge credits to @thefyfy on github for thier Screenly Manager which helped me understand how bad Screenly's API is.
-    //And for the two classes below. They are essentially copy pasta-ed with minor changes to meet my needs
     public class Asset
     {
         [Newtonsoft.Json.JsonProperty(PropertyName = "asset_id")]
