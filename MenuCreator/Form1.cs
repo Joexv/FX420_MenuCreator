@@ -27,6 +27,8 @@ using WMPLib;
 using AppForm = System.Windows.Forms.Application;
 using Excel = Microsoft.Office.Interop.Excel;
 //Dont you just love all of these references?
+//All functions in a single form? Yes please 😫😫😫😫😫😫
+//This needs to be refactored so bad. But hey. Who has time for that am I right?????
 
 namespace MenuCreator
 {
@@ -1124,13 +1126,19 @@ namespace MenuCreator
 
             sF.Checked = Ping(Flower);
             sJ.Checked = Ping(Joint);
-            sE.Checked = Ping(Edible);
-            sD.Checked = Ping(Dab);
-            sC.Checked = Ping(Cart);
-            sS.Checked = Ping(Special);
-
-            if (badEgg)
-                Noti("Error!", "One or more of the menus could not be pinged!");
+            if(sF.Checked && sJ.Checked)
+            {
+                sE.Checked = Ping(Edible);
+                sD.Checked = Ping(Dab);
+                sC.Checked = Ping(Cart);
+                sS.Checked = Ping(Special);
+                if (badEgg)
+                    Noti("Error!", "One or more of the menus could not be pinged!");
+            }
+            else
+            {
+                Noti("Error!", "The Flower menu and Joint menu could not be reached. Due to this, MenuCreator has stopped trying to reach other menus, functionality may be limited!");
+            }
         }
 
         //I could never get toast notifications to work, but this works too
