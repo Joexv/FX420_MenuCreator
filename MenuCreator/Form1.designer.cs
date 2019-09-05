@@ -86,6 +86,8 @@
             this.preview = new System.Windows.Forms.CheckBox();
             this.button11 = new System.Windows.Forms.Button();
             this.button12 = new System.Windows.Forms.Button();
+            this.button16 = new System.Windows.Forms.Button();
+            this.button17 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox2.SuspendLayout();
@@ -224,7 +226,7 @@
             this.button3.FlatAppearance.MouseDownBackColor = System.Drawing.Color.MidnightBlue;
             this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.button3.ForeColor = System.Drawing.Color.White;
-            this.button3.Location = new System.Drawing.Point(10, 378);
+            this.button3.Location = new System.Drawing.Point(10, 429);
             this.button3.Margin = new System.Windows.Forms.Padding(2);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(128, 40);
@@ -240,7 +242,7 @@
             this.button4.FlatAppearance.MouseDownBackColor = System.Drawing.Color.MidnightBlue;
             this.button4.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.button4.ForeColor = System.Drawing.Color.White;
-            this.button4.Location = new System.Drawing.Point(10, 422);
+            this.button4.Location = new System.Drawing.Point(10, 473);
             this.button4.Margin = new System.Windows.Forms.Padding(2);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(128, 40);
@@ -260,7 +262,6 @@
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 6;
             this.pictureBox1.TabStop = false;
-            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
             // 
             // button5
             // 
@@ -604,7 +605,7 @@
             this.button14.BackColor = System.Drawing.Color.ForestGreen;
             this.button14.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.button14.ForeColor = System.Drawing.Color.White;
-            this.button14.Location = new System.Drawing.Point(775, 593);
+            this.button14.Location = new System.Drawing.Point(775, 574);
             this.button14.Name = "button14";
             this.button14.Size = new System.Drawing.Size(122, 42);
             this.button14.TabIndex = 18;
@@ -759,12 +760,43 @@
             this.button12.Visible = false;
             this.button12.Click += new System.EventHandler(this.button11_Click);
             // 
+            // button16
+            // 
+            this.button16.BackColor = System.Drawing.Color.ForestGreen;
+            this.button16.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.button16.ForeColor = System.Drawing.Color.White;
+            this.button16.Location = new System.Drawing.Point(775, 628);
+            this.button16.Name = "button16";
+            this.button16.Size = new System.Drawing.Size(122, 42);
+            this.button16.TabIndex = 31;
+            this.button16.Text = "Restore missing files";
+            this.button16.UseVisualStyleBackColor = false;
+            this.button16.Click += new System.EventHandler(this.button16_Click);
+            // 
+            // button17
+            // 
+            this.button17.BackColor = System.Drawing.Color.ForestGreen;
+            this.button17.FlatAppearance.BorderColor = System.Drawing.Color.MidnightBlue;
+            this.button17.FlatAppearance.MouseDownBackColor = System.Drawing.Color.MidnightBlue;
+            this.button17.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.button17.ForeColor = System.Drawing.Color.White;
+            this.button17.Location = new System.Drawing.Point(10, 378);
+            this.button17.Margin = new System.Windows.Forms.Padding(2);
+            this.button17.Name = "button17";
+            this.button17.Size = new System.Drawing.Size(127, 40);
+            this.button17.TabIndex = 32;
+            this.button17.Text = "Print All Menus";
+            this.button17.UseVisualStyleBackColor = false;
+            this.button17.Click += new System.EventHandler(this.button17_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(1487, 708);
+            this.Controls.Add(this.button17);
+            this.Controls.Add(this.button16);
             this.Controls.Add(this.button12);
             this.Controls.Add(this.button11);
             this.Controls.Add(this.preview);
@@ -871,6 +903,8 @@
         private System.Windows.Forms.CheckBox preview;
         private System.Windows.Forms.Button button11;
         private System.Windows.Forms.Button button12;
+        private System.Windows.Forms.Button button16;
+        private System.Windows.Forms.Button button17;
     }
 }
 
