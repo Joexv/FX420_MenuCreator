@@ -129,6 +129,7 @@ namespace MenuCreator
 
                 SFTPUpload(Output, webURL, GetIP());
                 Upload(webURL, GetIP());
+                Noti("Menu Creation", "Done");
             }
         }
 
@@ -211,10 +212,10 @@ namespace MenuCreator
             File.Delete(Output);
             if (File.Exists(XLSX)) {
                 ConvertFile(Output);
-                PreviewImage();
+                if(preview.Checked)
+                    PreviewImage();
             }
             else
-                if (!dailyRadio.Checked)
                 MessageBox.Show("Excel File is missing!");
             Cursor.Current = Cursors.Default;
         }
@@ -405,10 +406,6 @@ namespace MenuCreator
 
         private void Form1_Load(object sender, EventArgs e)
         {
-#if !DEBUG
-            PingAll();
-            StartTimer();
-#endif
             if (Process.GetProcessesByName("MenuCreator").Count() > 1)
                 this.Close();
             if (!File.Exists("Settings.ini"))
@@ -427,6 +424,8 @@ namespace MenuCreator
             foreach(string file in fileArr)
                 if (!File.Exists(file))
                     Console.WriteLine(file + " is missing!");
+
+            this.Text = "Menu Creator v" + AppForm.ProductVersion;
         }
 
         //Restores proper connection to local server. This is done due to Windows not consistatly restoring the connection on its own.
@@ -1103,6 +1102,27 @@ namespace MenuCreator
 
             return pingable;
         }
+
+        private async Task<bool> PingAsync(string IP)
+        {
+            bool pingable = false;
+            Ping pinger = null;
+            try
+            {
+                pinger = new Ping();
+                PingReply reply = await pinger.SendPingAsync(IP);
+                pingable = reply.Status == IPStatus.Success;
+            }
+            catch { }
+            finally { if (pinger != null) { pinger.Dispose(); } }
+
+            if (!pingable)
+                badEgg = true;
+
+            return pingable;
+        }
+
+
         private const String APP_ID = "MenuCreator";
         private void OnElapsed(object sender, ElapsedEventArgs e)
         {
@@ -1120,18 +1140,18 @@ namespace MenuCreator
         }
 
         bool badEgg = false;
-        private void PingAll()
+        private async void PingAll()
         {
             badEgg = false;
 
-            sF.Checked = Ping(Flower);
-            sJ.Checked = Ping(Joint);
+            sF.Checked = await PingAsync(Flower);
+            sJ.Checked = await PingAsync(Joint);
             if(sF.Checked && sJ.Checked)
             {
-                sE.Checked = Ping(Edible);
-                sD.Checked = Ping(Dab);
-                sC.Checked = Ping(Cart);
-                sS.Checked = Ping(Special);
+                sE.Checked = await PingAsync(Edible);
+                sD.Checked = await PingAsync(Dab);
+                sC.Checked = await PingAsync(Cart);
+                sS.Checked = await PingAsync(Special);
                 if (badEgg)
                     Noti("Error!", "One or more of the menus could not be pinged!");
             }
@@ -1261,6 +1281,11 @@ namespace MenuCreator
                 }
                 this.Close();
             }
+
+#if !DEBUG
+            PingAll();
+            StartTimer();
+#endif
         }
 
         private static string oauth => File.ReadAllText(@"Z:\Slack Bot\SlackBot_Auth.txt");
@@ -1437,7 +1462,7 @@ namespace MenuCreator
                     client.PostMessage(string.Format("Prodcut failed to get added! It either exists already, or it requires functions that arent implemented yet! {0}:{1}", pdt.Company, pdt.Name), channel: "#menu_updates", username: "menubot");
                 }
             }
-            catch (Exception ex)
+            catch
             {
                 var client = new SlackClient(oauth);
                 client.PostMessage(string.Format("Prodcut failed to get added! Please attempt to add the product manually! {0}:{1}", pdt.Company, pdt.Name), channel: "#menu_updates", username: "menubot");
@@ -1585,6 +1610,11 @@ namespace MenuCreator
 
             File.AppendAllLines("Print.txt", parts);
             SendToPrinter("Print.txt");
+        }
+
+        private void NotifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+
         }
     }
 

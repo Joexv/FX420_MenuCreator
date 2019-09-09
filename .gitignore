@@ -4,3 +4,10 @@
 .vs/MenuCreator/v15/Server/sqlite3/storage.ide
 .vs/MenuCreator/v15/Server/sqlite3/storage.ide-shm
 .vs/MenuCreator/v15/Server/sqlite3/storage.ide-wal
+.vs/MenuCreator/v16/Server/sqlite3/db.lock
+.vs/MenuCreator/v16/Server/sqlite3/storage.ide
+.vs/MenuCreator/v16/Server/sqlite3/storage.ide-shm
+.vs/MenuCreator/v16/Server/sqlite3/storage.ide-wal
+MenuCreator/obj/Release/MenuCreator.exe
+MenuCreator/obj/Release/MenuCreator.pdb
+*.exe
