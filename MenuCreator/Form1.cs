@@ -129,7 +129,6 @@ namespace MenuCreator
 
                 SFTPUpload(Output, webURL, GetIP());
                 Upload(webURL, GetIP());
-                Noti("Menu Creation", "Done");
             }
         }
 
@@ -1238,6 +1237,7 @@ namespace MenuCreator
             a.SkipAssetCheck = 1;
             a.IsProcessing = 0;
             await newDevice.CreateAsset(a);
+            Noti("Menu Creation", "Done");
         }
 
         private void autoUpload_CheckedChanged(object sender, EventArgs e)
